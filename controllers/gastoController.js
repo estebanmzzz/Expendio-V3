@@ -6,7 +6,7 @@ exports.getAllGastos = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM Gastos");
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch expenses" });
+    res.status(500).json({ error: "Error al fetchear Gastos" });
   }
 };
 
@@ -19,11 +19,11 @@ exports.getGastoById = async (req, res) => {
       id,
     ]);
     if (rows.length === 0)
-      return res.status(404).json({ error: "Expense not found" });
+      return res.status(404).json({ error: "Gasto no encontrado" });
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch expense" });
+    res.status(500).json({ error: "Error al fetchear el gasto" });
   }
 };
 
@@ -34,7 +34,7 @@ exports.createGasto = async (req, res) => {
   if (!usuario_id || !categoria_id || !monto) {
     return res
       .status(400)
-      .json({ error: "User ID, Category ID, and Amount are required" });
+      .json({ error: "User ID, Category ID, y Amount son requeridos" });
   }
 
   try {
@@ -43,14 +43,12 @@ exports.createGasto = async (req, res) => {
       [usuario_id, categoria_id, monto, descripcion || null]
     );
 
-    res
-      .status(201)
-      .json({
-        message: "Expense created successfully",
-        gasto_id: result.insertId,
-      });
+    res.status(201).json({
+      message: "Gasto creado exitosamente",
+      gasto_id: result.insertId,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create expense" });
+    res.status(500).json({ error: "Error al crear el gasto" });
   }
 };
 
@@ -62,7 +60,7 @@ exports.updateGasto = async (req, res) => {
   if (!monto && !descripcion) {
     return res
       .status(400)
-      .json({ error: "At least one field is required for update" });
+      .json({ error: "Sin datos para updatear, no hay update" });
   }
 
   const updates = [];
@@ -86,12 +84,12 @@ exports.updateGasto = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Expense not found" });
+      return res.status(404).json({ error: "Gasto no encontrado" });
     }
 
-    res.status(200).json({ message: "Expense updated successfully" });
+    res.status(200).json({ message: "Gasto actualizado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update expense" });
+    res.status(500).json({ error: "Fallo al actualizar el gasto" });
   }
 };
 
@@ -105,11 +103,11 @@ exports.deleteGasto = async (req, res) => {
     ]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Expense not found" });
+      return res.status(404).json({ error: "Gasto no encontrado" });
     }
 
-    res.status(200).json({ message: "Expense deleted successfully" });
+    res.status(200).json({ message: "Gasto eliminado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete expense" });
+    res.status(500).json({ error: "Error al eliminar el gasto" });
   }
 };

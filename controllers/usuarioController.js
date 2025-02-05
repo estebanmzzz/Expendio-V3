@@ -1,14 +1,16 @@
 const pool = require("../models/db");
 
+// Funcion Obtener Todos los Usuarios
 exports.getAllUsuarios = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Usuarios");
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch users" });
+    res.status(500).json({ error: "Fallo al buscar todos los usuarios" });
   }
 };
 
+// Funcion Obtener Usuario por ID
 exports.getUsuarioById = async (req, res) => {
   const { id } = req.params;
 
@@ -18,15 +20,16 @@ exports.getUsuarioById = async (req, res) => {
       [id]
     );
     if (rows.length === 0)
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch user" });
+    res.status(500).json({ error: "Fallo en el fetch de usuario" });
   }
 };
 
-exports.createUsuario = async (req, res) => {
+// Funcion Crear Usuario
+/* exports.createUsuario = async (req, res) => {
   const { nombre, apellido, nickname, email } = req.body;
 
   if (!nombre || !apellido || !nickname || !email) {
@@ -53,8 +56,9 @@ exports.createUsuario = async (req, res) => {
     }
     res.status(500).json({ error: "Failed to create user" });
   }
-};
+}; */
 
+// Funcion Update Usuario
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, nickname, email } = req.body;
@@ -62,7 +66,7 @@ exports.updateUsuario = async (req, res) => {
   if (!nombre && !apellido && !nickname && !email) {
     return res
       .status(400)
-      .json({ error: "At least one field is required for update" });
+      .json({ error: "Sin datos para updatear, no hay update" });
   }
 
   const updates = [];
@@ -94,17 +98,17 @@ exports.updateUsuario = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.status(200).json({ message: "User updated successfully" });
+    res.status(200).json({ message: "Usuario actualizado exitosamente" });
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
       return res
         .status(409)
-        .json({ error: "Duplicate entry. Nickname or email already exists." });
+        .json({ error: "Duplicado. Ese correo o nickname ya existen." });
     }
-    res.status(500).json({ error: "Failed to update user" });
+    res.status(500).json({ error: "Fallo al actualizar usuario" });
   }
 };
 
@@ -118,11 +122,11 @@ exports.deleteUsuario = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "Usuario eliminado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete user" });
+    res.status(500).json({ error: "Fallo al eliminar usuario" });
   }
 };

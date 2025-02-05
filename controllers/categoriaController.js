@@ -42,12 +42,10 @@ exports.createCategoria = async (req, res) => {
       [nombre, categoria_padre_id || null]
     );
 
-    res
-      .status(201)
-      .json({
-        message: "Category created successfully",
-        categoria_id: result.insertId,
-      });
+    res.status(201).json({
+      message: "Category created successfully",
+      categoria_id: result.insertId,
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to create category" });
   }
@@ -85,12 +83,12 @@ exports.updateCategoria = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Category no encontrada" });
     }
 
-    res.status(200).json({ message: "Category updated successfully" });
+    res.status(200).json({ message: "Categoria updated exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update category" });
+    res.status(500).json({ error: "Error al actualizar la categoria" });
   }
 };
 
@@ -105,11 +103,11 @@ exports.deleteCategoria = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Category no encontrada" });
     }
 
-    res.status(200).json({ message: "Category deleted successfully" });
+    res.status(200).json({ message: "Categoria deleted exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete category" });
+    res.status(500).json({ error: "Error al eliminar la categoria" });
   }
 };

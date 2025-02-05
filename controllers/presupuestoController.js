@@ -6,7 +6,7 @@ exports.getAllPresupuestos = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM Presupuestos");
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch budgets" });
+    res.status(500).json({ error: "Fallo al obtener presupuestos" });
   }
 };
 
@@ -20,11 +20,11 @@ exports.getPresupuestoById = async (req, res) => {
       [id]
     );
     if (rows.length === 0)
-      return res.status(404).json({ error: "Budget not found" });
+      return res.status(404).json({ error: "Presupuesto no encontrado" });
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch budget" });
+    res.status(500).json({ error: "Fallo al obtener presupuesto" });
   }
 };
 
@@ -33,9 +33,9 @@ exports.createPresupuesto = async (req, res) => {
   const { usuario_id, monto } = req.body;
 
   if (!usuario_id || !monto) {
-    return res
-      .status(400)
-      .json({ error: "Usuario ID and amount are required" });
+    return res.status(400).json({
+      error: "Usuario ID y monto son requeridos para crear un presupuesto",
+    });
   }
 
   try {
@@ -45,11 +45,11 @@ exports.createPresupuesto = async (req, res) => {
     );
 
     res.status(201).json({
-      message: "Budget created successfully",
+      message: "Prsupuesto creado existosamente",
       presupuesto_id: result.insertId,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create budget" });
+    res.status(500).json({ error: "Error al crear presupuesto" });
   }
 };
 
@@ -59,7 +59,7 @@ exports.updatePresupuesto = async (req, res) => {
   const { monto } = req.body;
 
   if (!monto) {
-    return res.status(400).json({ error: "Amount is required for update" });
+    return res.status(400).json({ error: "Falta el monto" });
   }
 
   try {
@@ -69,12 +69,12 @@ exports.updatePresupuesto = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Budget not found" });
+      return res.status(404).json({ error: "Presupuesto no encontrado" });
     }
 
-    res.status(200).json({ message: "Budget updated successfully" });
+    res.status(200).json({ message: "Presupuesto actualizado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update budget" });
+    res.status(500).json({ error: "Error al actualizar presupuesto" });
   }
 };
 
@@ -89,11 +89,11 @@ exports.deletePresupuesto = async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Budget not found" });
+      return res.status(404).json({ error: "Presupuesto no encontrado" });
     }
 
-    res.status(200).json({ message: "Budget deleted successfully" });
+    res.status(200).json({ message: "Presupuesto eliminado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete budget" });
+    res.status(500).json({ error: "Error al eliminar presupuesto" });
   }
 };
