@@ -17,9 +17,9 @@ exports.register = async (req, res) => {
       [usuarioResult.insertId, hashedPassword]
     );
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "Usuario creado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to register user" });
+    res.status(500).json({ error: "Error al crear usuario" });
   }
 };
 
@@ -32,14 +32,15 @@ exports.login = async (req, res) => {
       [email]
     );
     if (rows.length === 0)
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "Credenciales inválidas" });
 
     const user = rows[0];
     const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+    if (!isMatch)
+      return res.status(401).json({ error: "Credenciales inválidas" });
 
-    res.status(200).json({ message: "Login successful", user });
+    res.status(200).json({ message: "Login exitoso", user });
   } catch (error) {
-    res.status(500).json({ error: "Failed to login" });
+    res.status(500).json({ error: "Login fallido" });
   }
 };
