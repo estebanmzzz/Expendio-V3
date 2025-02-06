@@ -29,7 +29,7 @@ exports.getUsuarioById = async (req, res) => {
 };
 
 // Funcion Crear Usuario
-/* exports.createUsuario = async (req, res) => {
+exports.createUsuario = async (req, res) => {
   const { nombre, apellido, nickname, email } = req.body;
 
   if (!nombre || !apellido || !nickname || !email) {
@@ -42,12 +42,10 @@ exports.getUsuarioById = async (req, res) => {
       [nombre, apellido, nickname, email]
     );
 
-    res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        usuario_id: result.insertId,
-      });
+    res.status(201).json({
+      message: "User created successfully",
+      usuario_id: result.insertId,
+    });
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
       return res
@@ -56,7 +54,7 @@ exports.getUsuarioById = async (req, res) => {
     }
     res.status(500).json({ error: "Failed to create user" });
   }
-}; */
+};
 
 // Funcion Update Usuario
 exports.updateUsuario = async (req, res) => {
