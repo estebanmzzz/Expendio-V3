@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(249, 250, 251);
+      }
+
+      .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        width: 100%;
+        max-width: 24rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: rgb(17, 24, 39);
+        margin-bottom: 0.5rem;
+      }
+
+      .description {
+        color: rgb(107, 114, 128);
+        font-size: 0.875rem;
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .input {
+        width: 100%;
+        padding: 0.625rem 0.75rem;
+        border: 1px solid rgb(209, 213, 219);
+        border-radius: 0.375rem;
+        outline: none;
+        transition: border-color 0.15s ease;
+      }
+
+      .input:focus {
+        border-color: rgb(37, 99, 235);
+        box-shadow: 0 0 0 1px rgb(37 99 235 / 0.1);
+      }
+
+      .submit-button {
+        background-color: rgb(37, 99, 235);
+        color: white;
+        padding: 0.625rem 1.25rem;
+        border: none;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+
+      .submit-button:hover {
+        background-color: rgb(29, 78, 216);
+      }
+
+      .links {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+      }
+
+      .link {
+        color: rgb(37, 99, 235);
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+      .input.error {
+        border-color: red;
+      }
+      .error-message {
+        color: red;
+        font-size: 0.725rem;
+        display: none;
+        margin-top: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card">
+      <div class="header">
+        <h2 class="title">Bienvenido de vuelta</h2>
+        <p class="description">Ingresa tu correo para acceder a tu cuenta</p>
+      </div>
+
+      <form class="form">
+        <div class="input-group">
+          <input
+            type="email"
+            name="email"
+            class="input"
+            placeholder="email"
+            id="email"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            name="password"
+            class="input"
+            placeholder="Password"
+            id="password"
+          />
+        </div>
+
+        <button type="submit" class="submit-button">Sign in</button>
+
+        <div class="links">
+          <a class="link">Olvidaste tu contraseña?</a>
+          <a href="Register.html" class="link">Crear una cuenta</a>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector(".form");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const data = {
+          email: formData.get("email").trim(),
+          password: formData.get("password"),
+        };
+
+        console.log("Datos de login:", data);
+
+        let isValid = validateForm(data);
+        if (!isValid) return;
+
+        try {
+          const response = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: data.email,
+              password: data.password,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert("Login exitoso");
+            form.reset();
+          } else {
+            alert("Error: " + result.error);
+          }
+        } catch (error) {
+          alert("Error en la conexión con el servidor");
+        }
+      });
+    });
+    function validateForm(data) {
+      let isValid = true;
+
+      isValid &= toggleError("email", isValidEmail(data.email));
+      isValid &= toggleError("password", data.password.length >= 8);
+
+      return !!isValid;
+    }
+
+    function toggleError(inputId, condition) {
+      const inputElement = document.getElementById(inputId);
+      if (condition) {
+        inputElement.classList.remove("error");
+        return true;
+      } else {
+        inputElement.classList.add("error");
+        return false;
+      }
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+  </script>
+</html>
