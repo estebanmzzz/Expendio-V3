@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Categorias</title>
-    <link rel="stylesheet" href="./CSS/dashboard.css" />
+    <link rel="stylesheet" href="./CSS/categorias.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
   </head>
   <body>
     <header>
@@ -52,7 +56,35 @@
 
     <main>
       <div class="components-container">
-        
+        <div class="categorias-container">
+          <div class="categorias-header">
+            <h2>Tus Categorías</h2>
+            <p>
+              Edita y agrega categorías para que puedas organizar mejor tus
+              gastos.
+            </p>
+            <button>Agregar Categoría</button>
+          </div>
+          <div class="categorias-cards-container">
+            <div class="categoria-card">
+              <div class="categoria-header">
+                <h3 class="categoria-name">COMPRAS</h3>
+                <div>
+                  <span class="material-symbols-outlined"> edit </span>
+                  <span class="material-symbols-outlined"> delete </span>
+                </div>
+              </div>
+              <div class="subcategorias-container">
+                <p class="subcategoria">Supermercado</p>
+                <p class="subcategoria">Alimentación</p>
+                <p class="subcategoria">Bazar</p>
+                <p class="subcategoria">IKEA</p>
+                <p class="subcategoria">Panadería</p>
+              </div>
+              <div>Ver todas</div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </body>

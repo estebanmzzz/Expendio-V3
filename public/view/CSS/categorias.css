@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+header {
+  background-color: white;
+  padding: 0.1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links div {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-links div:hover:not(.user-avatar) {
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+.components-container {
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  height: 100vh;
+  padding: 20px; 
+}
+
+.categorias-cards-container {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 1rem;
+}
+
+.categoria-card {
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.categoria-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.categoria-name{
+  font-size: 1.5rem;
+}
+
+.subcategorias-container {
+
+}
+
+.subcategoria{
+
+}
