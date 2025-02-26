@@ -59,23 +59,69 @@ header {
 .categoria-card {
   border: 1px solid black;
   border-radius: 8px;
-  padding: 1rem;
+  padding: .5rem;
+  width: 100%;
 }
 
-.categoria-header{
+.categoria-card-header{
   display: flex;
-  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  cursor: pointer;
 }
 .categoria-name{
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .subcategorias-container {
-
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
-.subcategoria{
-
+.subcategoria {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem;
+  justify-content: space-between;
+  border-bottom: 1px solid darkgray;
 }
+
+.subcategoria-name{
+  font-size: 1rem;
+}
+
+.subcategoria-btns-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.material-symbols-outlined {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.edit-btn {
+  color: #3b82f6;
+}
+
+.delete-btn {
+  color: #dc2626;
+}
+
+.categoria-card-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .25rem;
+}
+
+.add-btn {
+  font-weight: 900;
+  color: #13812b;
+}
+
+
+
