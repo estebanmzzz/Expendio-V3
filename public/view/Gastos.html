@@ -3,17 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard de Gastos</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./CSS/gastos.css" />
   </head>
   <body>
     <header>
       <div class="logo">LOGO</div>
       <div class="nav-links">
-        <div>Mi Dashboard</div>
-        <div>Mis Presupuestos</div>
-        <div>Mis Gastos</div>
-        <div>Mis Categorías</div>
+        <div onclick="location.href='./Dashboard.html'" style="cursor: pointer">
+          Mi Dashboard
+        </div>
+        <div
+          onclick="location.href='./Presupuestos.html'"
+          style="cursor: pointer"
+        >
+          Mis Presupuestos
+        </div>
+        <div onclick="location.href='./Gastos.html'" style="cursor: pointer">
+          Mis Gastos
+        </div>
+        <div
+          onclick="location.href='./Categorias.html'"
+          style="cursor: pointer"
+        >
+          Mis Categorías
+        </div>
       </div>
       <div class="nav-links">
         <div class="user-avatar">
@@ -158,5 +172,5 @@
       </div>
     </main>
   </body>
-  <script src="script.js" defer></script>
+  <script src="./JS/gastos.js" defer></script>
 </html>
