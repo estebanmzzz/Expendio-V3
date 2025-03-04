@@ -28,6 +28,36 @@ exports.getPresupuestoById = async (req, res) => {
   }
 };
 
+// Get budgets by user ID
+exports.getPresupuestosByUserId = async (req, res) => {
+  const { usuario_id } = req.params;
+
+  try {
+    // First, verify the user exists (optional but recommended)
+    const [userCheck] = await pool.query(
+      "SELECT * FROM Usuarios WHERE usuario_id = ?",
+      [usuario_id]
+    );
+
+    if (userCheck.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    // Retrieve budgets for the specific user
+    const [budgets] = await pool.query(
+      "SELECT * FROM Presupuestos WHERE usuario_id = ?",
+      [usuario_id]
+    );
+
+    // If no budgets found, return an empty array instead of an error
+    res.status(200).json(budgets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Fallo al obtener presupuestos del usuario" });
+  }
+};
+
 // Create a new budget
 exports.createPresupuesto = async (req, res) => {
   const { usuario_id, monto } = req.body;
@@ -45,7 +75,7 @@ exports.createPresupuesto = async (req, res) => {
     );
 
     res.status(201).json({
-      message: "Prsupuesto creado existosamente",
+      message: "Presupuesto creado exitosamente",
       presupuesto_id: result.insertId,
     });
   } catch (error) {

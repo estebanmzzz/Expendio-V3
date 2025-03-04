@@ -123,17 +123,10 @@ async function createBudget(amount) {
   }
 }
 
-// Función para obtener el ID del usuario actual
-// Esta función debe ser implementada según tu sistema de autenticación
 function getUserId() {
-  // Por ahora, devolvemos un ID fijo para pruebas
-  return 1;
-
-  // En producción, podrías obtener el ID del usuario de:
-  // - Una cookie
-  // - localStorage
-  // - Un estado global de la aplicación
-  // - Un token JWT decodificado
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  userId = user.id;
+  return userID;
 }
 
 // Event listener para el formulario de cambio de presupuesto
@@ -159,76 +152,6 @@ budgetChangeForm.addEventListener("submit", async function (event) {
   }
 });
 
-// Cargar los presupuestos al iniciar la página
 document.addEventListener("DOMContentLoaded", loadBudgets);
 
-// Función para simular datos en caso de desarrollo local
-/* function loadMockData() {
-  // Esta función es útil para desarrollo sin backend
-  const mockData = [
-    {
-      presupuesto_id: 1,
-      usuario_id: 1,
-      monto: 15000,
-      fecha_asignacion: "2024-03-01",
-    },
-    {
-      presupuesto_id: 2,
-      usuario_id: 1,
-      monto: 14500,
-      fecha_asignacion: "2024-02-01",
-    },
-    {
-      presupuesto_id: 3,
-      usuario_id: 1,
-      monto: 13800,
-      fecha_asignacion: "2024-01-01",
-    },
-    {
-      presupuesto_id: 4,
-      usuario_id: 1,
-      monto: 12000,
-      fecha_asignacion: "2023-12-01",
-    },
-    {
-      presupuesto_id: 5,
-      usuario_id: 1,
-      monto: 12500,
-      fecha_asignacion: "2023-11-01",
-    },
-  ];
 
-  // Sobreescribir la función fetch global para pruebas
-  window.fetch = function (url, options) {
-    return new Promise((resolve) => {
-      // Simular una pequeña latencia de red
-      setTimeout(() => {
-        if (url.includes("/presupuestos")) {
-          if (options && options.method === "POST") {
-            // Agregar el nuevo presupuesto al inicio del array
-            const newBudget = JSON.parse(options.body);
-            newBudget.presupuesto_id = mockData.length + 1;
-            mockData.unshift(newBudget);
-
-            resolve({
-              ok: true,
-              json: () => Promise.resolve(newBudget),
-            });
-          } else {
-            // GET request - devolver todos los presupuestos
-            resolve({
-              ok: true,
-              json: () => Promise.resolve(mockData),
-            });
-          }
-        }
-      }, 300);
-    });
-  };
-
-  // Cargar datos simulados
-  loadBudgets();
-} */
-
-// Descomentar la siguiente línea para usar datos de prueba durante el desarrollo
-//loadMockData();
