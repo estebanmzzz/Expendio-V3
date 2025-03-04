@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+header {
+  background-color: white;
+  padding: 0.1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links div {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-links div:hover:not(.user-avatar) {
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+/* CARDS CONTAINER */
+.components-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.components-container section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BUDGET CARD - Estilo común para todas las tarjetas */
+.budget-card {
+  width: 100%;
+  max-width: 580px;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+  color: #111827;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.montos {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.amount-box {
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  width: 100%;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.amount-box .total {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.amount-box h5 {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.amount-box p {
+  color: #334155;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Formulario de cambio de presupuesto */
+.budget-change-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  background-color: #f8fafc;
+}
+
+button {
+  width: fit-content;
+  padding: 0.75rem;
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin: 1rem auto 0;
+  display: block;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* HISTORIAL DE PRESUPUESTOS */
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.budget-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: .5rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+}
+
+.budget-title {
+  font-weight: 500;
+  color: #334155;
+  font-size: 0.875rem;
+}
+
+.budget-amount {
+  font-weight: 600;
+  color: #2563eb;
+  text-align: right;
+  font-size: 0.875rem;
+}
+
+.budget-date {
+  color: #64748b;
+  font-size: 0.75rem;
+  text-align: right;
+}
