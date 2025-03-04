@@ -125,8 +125,7 @@ async function createBudget(amount) {
 
 function getUserId() {
   const user = JSON.parse(sessionStorage.getItem("user"));
-  userId = user.id;
-  return userID;
+  return user.id; // Corregido
 }
 
 // Event listener para el formulario de cambio de presupuesto
@@ -153,5 +152,3 @@ budgetChangeForm.addEventListener("submit", async function (event) {
 });
 
 document.addEventListener("DOMContentLoaded", loadBudgets);
-
-
