@@ -4,7 +4,7 @@ const budgetChangeForm = document.getElementById("budget-change-form");
 const budgetList = document.querySelector(".budget-list");
 
 // URL base de la API (ajusta según tu entorno)
-const API_URL = "http://localhost:5000/api/presupuestos/";
+const API_URL = "http://localhost:5000/api/presupuestos/user/";
 
 // Función para formatear montos como dinero
 function formatMoney(amount) {
@@ -29,7 +29,8 @@ function getMonthName(dateString) {
 // Función para cargar los presupuestos
 async function loadBudgets() {
   try {
-    const response = await fetch(`${API_URL}`);
+    const userId = getUserId(); // Obtener el usuario_id desde sessionStorage
+    const response = await fetch(`${API_URL}${userId}`);
 
     if (!response.ok) {
       throw new Error("Error al cargar los presupuestos");

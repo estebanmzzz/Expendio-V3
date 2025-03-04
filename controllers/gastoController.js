@@ -15,13 +15,30 @@ exports.getGastoById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [rows] = await pool.query("SELECT * FROM Gastos WHERE gasto_id = ?", [
-      id,
-    ]);
+    const [rows] = await pool.query(
+      `
+      SELECT 
+        g.gasto_id, 
+        g.usuario_id, 
+        g.categoria_id, 
+        g.monto, 
+        g.descripcion, 
+        g.fecha_gasto, 
+        c.nombre AS categoria_nombre, 
+        cp.nombre AS subcategoria_nombre
+      FROM Gastos g
+      LEFT JOIN Categorias c ON g.categoria_id = c.categoria_id
+      LEFT JOIN Categorias cp ON c.categoria_padre_id = cp.categoria_id
+      WHERE g.usuario_id = ?
+    `,
+      [id]
+    );
+
+    console.log(rows); // Verifica los datos obtenidos de la base de datos
     if (rows.length === 0)
       return res.status(404).json({ error: "Gasto no encontrado" });
 
-    res.status(200).json(rows[0]);
+    res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ error: "Error al fetchear el gasto" });
   }
