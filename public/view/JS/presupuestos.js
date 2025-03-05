@@ -102,7 +102,7 @@ async function createBudget(amount) {
       fecha_asignacion: new Date().toISOString().split("T")[0], // Fecha actual en formato YYYY-MM-DD
     };
 
-    const response = await fetch(`${API_URL}`, {
+    const response = await fetch("http://localhost:5000/api/presupuestos/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
