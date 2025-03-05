@@ -30,7 +30,7 @@ exports.getCategoriaById = async (req, res) => {
 
 // Create a new category
 exports.createCategoria = async (req, res) => {
-  const { nombre, categoria_padre_id } = req.body;
+  const { nombre, categoria_padre_id, usuario_id } = req.body;
 
   if (!nombre) {
     return res.status(400).json({ error: "Name is required" });
@@ -38,8 +38,8 @@ exports.createCategoria = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO Categorias (nombre, categoria_padre_id) VALUES (?, ?)",
-      [nombre, categoria_padre_id || null]
+      "INSERT INTO Categorias (nombre, categoria_padre_id, usuario_id) VALUES (?, ?, ?)",
+      [nombre, categoria_padre_id || null, usuario_id]
     );
 
     res.status(201).json({

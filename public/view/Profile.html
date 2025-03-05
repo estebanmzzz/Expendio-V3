@@ -55,7 +55,7 @@
             >
             <label
               >Email:
-              <span id="email" class="user-data"></span>name@example.com</label
+              <span id="email" class="user-data">name@example.com</span></label
             >
             <label
               >Nickname:
@@ -63,12 +63,44 @@
             >
             <label>Contraseña: <button>Editar Contraseña</button></label>
           </div>
-          <button class="edit-btn">Editar Datos</button>
-          <button>Eliminar Cuenta</button>
-          <button>Cerrar Sesión</button>
+          <div class="btn-container">
+            <button class="btn edit-btn">Editar Datos</button>
+            <button class="btn delete-account-btn">Eliminar Cuenta</button>
+            <button class="btn logout-btn">Cerrar Sesión</button>
+          </div>
         </div>
       </div>
     </main>
   </body>
-  <script src="./JS/dashboard.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        function getUserData() {
+          const data = sessionStorage.getItem("user");
+          if (!data) throw new Error("No user data found in session storage");
+          return JSON.parse(data);
+        }
+
+        const user = getUserData();
+
+        document.getElementById("nombre").innerHTML = user.nombre;
+        document.getElementById("apellido").innerHTML = user.apellido;
+        document.getElementById("email").innerHTML = user.email;
+        document.getElementById("nickname").innerHTML = user.nickname;
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      }
+
+      function logout() {
+        sessionStorage.clear(); // Borra todos los datos del sessionStorage
+        window.location.href = "../index.html"; // Redirige a la página de inicio
+      }
+
+      // Asigna la función al botón de "Cerrar Sesión"
+      const logoutBtn = document.querySelector(".logout-btn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+    });
+  </script>
 </html>

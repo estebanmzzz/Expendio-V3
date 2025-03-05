@@ -61,7 +61,7 @@ async function fetchGastos() {
     renderExpenses(gastos);
   } catch (error) {
     console.error("Error fetching gastos:", error);
-    expensesList.innerHTML = "<p>Error al cargar los gastos.</p>";
+    expensesList.innerHTML = "<p>Aún no has cargado ningún gasto.</p>";
   }
 }
 
