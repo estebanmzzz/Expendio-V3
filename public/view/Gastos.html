@@ -52,8 +52,56 @@
 
     <main>
       <div class="components-container">
-
         <section class="right-section">
+          <div class="add-expense-container">
+            <h2>Añadir nuevo gasto</h2>
+
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <input type="text" id="descripcion" name="descripcion" />
+            </div>
+
+            <div class="form-group">
+              <label for="monto">Monto</label>
+              <input
+                type="number"
+                id="monto"
+                name="monto"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <form id="add-expense-form">
+              <div class="form-group">
+                <label for="categoria">Categoría</label>
+                <select id="categoria" name="categoria" required>
+                  <option value="">Selecciona una categoría</option>
+                  <!-- Se llenará dinámicamente -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="subcategoria">Subcategoría</label>
+                <select id="subcategoria" name="subcategoria">
+                  <option value="">Selecciona primero una categoría</option>
+                  <!-- Se llenará dinámicamente -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fecha_gasto">Fecha</label>
+                <input
+                  type="date"
+                  id="fecha_gasto"
+                  name="fecha_gasto"
+                  required
+                />
+              </div>
+              <button type="submit" class="add-expense-button">
+                Guardar gasto
+              </button>
+            </form>
+          </div>
 
           <div id="ultimos-gastos-card">
             <div class="expenses-card">

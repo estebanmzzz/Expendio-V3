@@ -11,25 +11,27 @@ exports.getAllGastos = async (req, res) => {
 };
 
 // Get an expense by ID
+// Get expenses by user ID
 exports.getGastoById = async (req, res) => {
   const { id } = req.params;
 
   try {
     const [rows] = await pool.query(
       `
-      SELECT 
-        g.gasto_id, 
-        g.usuario_id, 
-        g.categoria_id, 
-        g.monto, 
-        g.descripcion, 
-        g.fecha_gasto, 
-        c.nombre AS categoria_nombre, 
+      SELECT
+        g.gasto_id,
+        g.usuario_id,
+        g.categoria_id,
+        g.monto,
+        g.descripcion,
+        g.fecha_gasto,
+        c.nombre AS categoria_nombre,
         cp.nombre AS subcategoria_nombre
       FROM Gastos g
       LEFT JOIN Categorias c ON g.categoria_id = c.categoria_id
       LEFT JOIN Categorias cp ON c.categoria_padre_id = cp.categoria_id
       WHERE g.usuario_id = ?
+      ORDER BY g.fecha_gasto DESC, g.gasto_id DESC
     `,
       [id]
     );
@@ -45,8 +47,10 @@ exports.getGastoById = async (req, res) => {
 };
 
 // Create a new expense
+// Modifica la función createGasto en tu controlador
 exports.createGasto = async (req, res) => {
-  const { usuario_id, categoria_id, monto, descripcion } = req.body;
+  const { usuario_id, categoria_id, monto, descripcion, fecha_gasto } =
+    req.body;
 
   if (!usuario_id || !categoria_id || !monto) {
     return res
@@ -56,8 +60,14 @@ exports.createGasto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO Gastos (usuario_id, categoria_id, monto, descripcion) VALUES (?, ?, ?, ?)",
-      [usuario_id, categoria_id, monto, descripcion || null]
+      "INSERT INTO Gastos (usuario_id, categoria_id, monto, descripcion, fecha_gasto) VALUES (?, ?, ?, ?, ?)",
+      [
+        usuario_id,
+        categoria_id,
+        monto,
+        descripcion || null,
+        fecha_gasto || new Date().toISOString().slice(0, 10),
+      ]
     );
 
     res.status(201).json({
@@ -65,6 +75,7 @@ exports.createGasto = async (req, res) => {
       gasto_id: result.insertId,
     });
   } catch (error) {
+    console.error("Error al crear el gasto:", error);
     res.status(500).json({ error: "Error al crear el gasto" });
   }
 };

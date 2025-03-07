@@ -283,14 +283,14 @@
 
           if (response.ok) {
             alert("Usuario registrado exitosamente");
-            form.reset();
+            //form.reset();
+            window.location.href = "/public/view/Login.html"; // EVALUAR
           } else {
             alert("Error: " + result.error);
           }
         } catch (error) {
           alert("Error en la conexión con el servidor");
         }
-        window.location.href = "../public/view/Login.html"; // EVALUAR
       });
     });
 
