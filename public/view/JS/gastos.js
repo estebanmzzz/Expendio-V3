@@ -4,6 +4,16 @@ const addExpenseForm = document.getElementById("add-expense-form");
 const categoriaSelect = document.getElementById("categoria");
 const subcategoriaSelect = document.getElementById("subcategoria");
 
+const userAvatar = document.querySelector(".user-avatar");
+
+if (userAvatar) {
+  userAvatar.addEventListener("click", function () {
+    window.location.href = "./profile.html";
+  });
+} else {
+  console.error("Elemento .user-avatar no encontrado.");
+}
+
 // Establecer la fecha de hoy por defecto en el campo de fecha
 document.addEventListener("DOMContentLoaded", () => {
   const fechaInput = document.getElementById("fecha_gasto");

@@ -6,6 +6,18 @@ const budgetList = document.querySelector(".budget-list");
 // URL base de la API (ajusta según tu entorno)
 const API_URL = "http://localhost:5000/api/presupuestos/user/";
 
+// Elemento para redireccionar al perfil
+const userAvatar = document.querySelector(".user-avatar");
+
+if (userAvatar) {
+  userAvatar.addEventListener("click", function () {
+    window.location.href = "./profile.html";
+  });
+} else {
+  console.error("Elemento .user-avatar no encontrado.");
+}
+
+
 // Función para formatear montos como dinero
 function formatMoney(amount) {
   return new Intl.NumberFormat("es-ES", {

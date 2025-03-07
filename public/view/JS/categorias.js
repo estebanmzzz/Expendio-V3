@@ -2,6 +2,16 @@
 let categorias = [];
 let usuario_id = null; // Esto debería venir de tu sistema de autenticación
 
+const userAvatar = document.querySelector(".user-avatar");
+
+if (userAvatar) {
+  userAvatar.addEventListener("click", function () {
+    window.location.href = "./profile.html";
+  });
+} else {
+  console.error("Elemento .user-avatar no encontrado.");
+}
+
 // Función principal que se ejecuta cuando el DOM está completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM completamente cargado");
