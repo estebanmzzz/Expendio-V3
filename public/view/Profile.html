@@ -92,11 +92,10 @@
       }
 
       function logout() {
-        sessionStorage.clear(); // Borra todos los datos del sessionStorage
-        window.location.href = "../index.html"; // Redirige a la página de inicio
+        sessionStorage.clear();
+        window.location.href = "../index.html";
       }
 
-      // Asigna la función al botón de "Cerrar Sesión"
       const logoutBtn = document.querySelector(".logout-btn");
       if (logoutBtn) {
         logoutBtn.addEventListener("click", logout);

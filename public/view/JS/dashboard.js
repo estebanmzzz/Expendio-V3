@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Redirección al perfil al hacer clic en el avatar
   const userAvatar = document.querySelector(".user-avatar");
 
   if (userAvatar) {
@@ -10,9 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("Elemento .user-avatar no encontrado.");
   }
 
-  /**
-   * FUNCIONES DE BUDGET CARD
-   */
+  /**BUDGET CARD */
+
   const totalElement = document.getElementById("totalBudget");
   const gastadoElement = document.getElementById("gastadoBudget");
   const restanteElement = document.getElementById("restanteBudg");
@@ -32,9 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateBudget(2500, 750);
 
-  /**
-   * FUNCIONES DE ADD GASTO CARD
-   */
+  /** ADD GASTO CARD */
+
   const subcategorias = {
     comida: ["Restaurantes", "Supermercado", "Snacks"],
     transporte: ["Gasolina", "Abono Transporte", "Taxi", "BiciMad", "Peajes"],
@@ -71,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* BARRAS CARD */
+
   const topCategories = [
     { category: "Vivienda", amount: 990 },
     { category: "Compras", amount: 320 },
@@ -116,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* FUNCIONES DE ULTIMOS GASTOS */
+
   const recentGastos = [
     {
       id: 1,

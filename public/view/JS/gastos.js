@@ -14,7 +14,7 @@ if (userAvatar) {
   console.error("Elemento .user-avatar no encontrado.");
 }
 
-// Establecer la fecha de hoy por defecto en el campo de fecha
+// Fecha de HOY en el campo
 document.addEventListener("DOMContentLoaded", () => {
   const fechaInput = document.getElementById("fecha_gasto");
   if (fechaInput) {
@@ -24,20 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Función para obtener el usuario_id desde sessionStorage
 function getUserId() {
   const user = JSON.parse(sessionStorage.getItem("user"));
   console.log(user.id);
   return user.id;
 }
 
-// Función para formatear la fecha
+// Formateo de fecha
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "2-digit" };
   return new Date(dateString).toLocaleDateString("es-ES", options);
 }
 
-// Función para formatear el monto
+// Formateo de monto
 function formatAmount(amount) {
   return amount.toLocaleString("es-ES", {
     style: "currency",
@@ -45,9 +44,9 @@ function formatAmount(amount) {
   });
 }
 
-// Función para renderizar los gastos
+// Rendereo de gastos
 function renderExpenses(gastos) {
-  // Ordenar gastos por fecha descendente (más recientes primero)
+  // Ordenar gastos por fecha DESC
   const gastosOrdenados = [...gastos].sort((a, b) => {
     return new Date(b.fecha_gasto) - new Date(a.fecha_gasto);
   });
@@ -69,9 +68,9 @@ function renderExpenses(gastos) {
     .join("");
 }
 
-// Función para obtener los gastos desde la API
+// FETCH DE GASTOS
 async function fetchGastos() {
-  const userId = getUserId(); // Obtener el usuario_id desde sessionStorage
+  const userId = getUserId();
 
   if (!userId) {
     console.error("Usuario no encontrado en sessionStorage.");
@@ -85,7 +84,7 @@ async function fetchGastos() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const gastos = await response.json();
-    console.log(gastos); // Verifica la estructura de la respuesta
+    console.log(gastos);
     renderExpenses(gastos);
   } catch (error) {
     console.error("Error fetching gastos:", error);
@@ -93,10 +92,8 @@ async function fetchGastos() {
   }
 }
 
-// Variable global para almacenar todas las categorías
 let todasLasCategorias = [];
 
-// Función para cargar las categorías en el dropdown
 async function loadCategorias() {
   const userId = getUserId();
 
@@ -116,19 +113,15 @@ async function loadCategorias() {
     const categorias = await response.json();
     console.log("Categorías cargadas:", categorias);
 
-    // Guardar todas las categorías
     todasLasCategorias = categorias;
 
-    // Limpiar opciones existentes
     categoriaSelect.innerHTML =
       '<option value="">Selecciona una categoría</option>';
 
-    // Filtrar solo las categorías principales (aquellas sin categoria_padre_id o con categoria_padre_id = null)
     const categoriasPrincipales = categorias.filter(
       (cat) => !cat.categoria_padre_id
     );
 
-    // Añadir categorías principales al select
     categoriasPrincipales.forEach((categoria) => {
       const option = document.createElement("option");
       option.value = categoria.categoria_id;
@@ -136,7 +129,6 @@ async function loadCategorias() {
       categoriaSelect.appendChild(option);
     });
 
-    // Escuchar cambios en la selección de categoría
     if (categoriaSelect) {
       categoriaSelect.addEventListener("change", updateSubcategorias);
     }
@@ -145,9 +137,7 @@ async function loadCategorias() {
   }
 }
 
-// Función para actualizar las subcategorías basándose en la categoría seleccionada
 function updateSubcategorias() {
-  // Limpiar opciones existentes
   subcategoriaSelect.innerHTML =
     '<option value="">Selecciona una subcategoría</option>';
 
@@ -158,7 +148,6 @@ function updateSubcategorias() {
     return;
   }
 
-  // Filtrar subcategorías basadas en la categoría seleccionada
   const subcategorias = todasLasCategorias.filter(
     (cat) => cat.categoria_padre_id == categoriaId
   );
@@ -166,7 +155,6 @@ function updateSubcategorias() {
   if (subcategorias.length > 0) {
     subcategoriaSelect.disabled = false;
 
-    // Añadir subcategorías al select
     subcategorias.forEach((subcat) => {
       const option = document.createElement("option");
       option.value = subcat.categoria_id;
@@ -180,7 +168,6 @@ function updateSubcategorias() {
   }
 }
 
-// Manejar envío del formulario
 if (addExpenseForm) {
   addExpenseForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -188,7 +175,7 @@ if (addExpenseForm) {
     const userId = getUserId();
     const categoriaId =
       document.getElementById("subcategoria").value ||
-      document.getElementById("categoria").value; // Usar subcategoría si está seleccionada, si no usar categoría
+      document.getElementById("categoria").value;
     const monto = document.getElementById("monto").value;
     const descripcion = document.getElementById("descripcion").value;
     const fechaGasto = document.getElementById("fecha_gasto").value;
@@ -222,18 +209,14 @@ if (addExpenseForm) {
       const result = await response.json();
       console.log("Gasto añadido:", result);
 
-      // Limpiar el formulario
       addExpenseForm.reset();
 
-      // Establecer fecha actual después de limpiar
       const today = new Date();
       const formattedDate = today.toISOString().substr(0, 10);
       document.getElementById("fecha_gasto").value = formattedDate;
 
-      // Recargar la lista de gastos
       fetchGastos();
 
-      // Deshabilitar el campo de subcategoría
       subcategoriaSelect.disabled = true;
       subcategoriaSelect.innerHTML =
         '<option value="">Selecciona primero una categoría</option>';
@@ -246,7 +229,6 @@ if (addExpenseForm) {
   });
 }
 
-// Inicializar: cargar gastos y categorías
 document.addEventListener("DOMContentLoaded", () => {
   fetchGastos();
   if (categoriaSelect) {

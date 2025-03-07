@@ -240,16 +240,16 @@
           const result = await response.json();
 
           if (response.ok) {
-            // Guardar información del usuario en Session Storage
+
             sessionStorage.setItem("user", JSON.stringify(result.user));
 
-            // Mostrar alerta de login exitoso
+
             alert("Login exitoso");
 
-            // Redirigir al dashboard
+
             window.location.href = "./Dashboard.html";
           } else {
-            // Mostrar mensaje de error
+
             alert("Error: " + result.error);
           }
         } catch (error) {
