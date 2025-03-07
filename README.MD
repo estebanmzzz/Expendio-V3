@@ -12,7 +12,7 @@
 
 Actualmente, la base de datos está en MySQL usando XAMPP. Próximamente lo migraré a Docker por recomendación de Pedro de DAM que me comentó que funciona mejor.
 
-Para crear la base de datos, te he dejado 2 archivos en `models/SQL`:
+Para crear la BBDD, te he dejado 2 archivos en `zDDBB`:
 
 1. `01-CreateDDBB-Expendio.sql` → Crea la base de datos y las tablas.
 2. `02-Inserts_categorias_default.sql` → Inserta las categorías de desault.

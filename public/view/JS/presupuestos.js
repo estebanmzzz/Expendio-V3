@@ -33,7 +33,7 @@ function getMonthName(dateString) {
 
 async function loadBudgets() {
   try {
-    const userId = getUserId(); 
+    const userId = getUserId();
     const response = await fetch(`${API_URL}${userId}`);
 
     if (!response.ok) {
@@ -93,9 +93,9 @@ function updateBudgetHistory(budgets) {
 async function createBudget(amount) {
   try {
     const newBudget = {
-      usuario_id: getUserId(), 
+      usuario_id: getUserId(),
       monto: parseFloat(amount),
-      fecha_asignacion: new Date().toISOString().split("T")[0], 
+      fecha_asignacion: new Date().toISOString().split("T")[0],
     };
 
     const response = await fetch("http://localhost:5000/api/presupuestos/", {
@@ -121,7 +121,7 @@ async function createBudget(amount) {
 
 function getUserId() {
   const user = JSON.parse(sessionStorage.getItem("user"));
-  return user.id; 
+  return user.id;
 }
 
 budgetChangeForm.addEventListener("submit", async function (event) {
