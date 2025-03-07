@@ -18,10 +18,12 @@ module.exports = {
   CategoriaSchema: {
     nombre: DataTypes.STRING(100),
     categoria_padre_id: DataTypes.INTEGER,
+    usuario_id: DataTypes.INTEGER,
   },
   GastoSchema: {
     monto: DataTypes.DECIMAL(10, 2),
     descripcion: DataTypes.TEXT,
     fecha_gasto: DataTypes.DATE,
+    //    usuario_id: DataTypes.INTEGER,
   },
 };

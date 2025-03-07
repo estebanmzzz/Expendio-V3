@@ -1,9 +1,13 @@
-// Estructura de datos para almacenar las categorías y subcategorías
+// Variables globales
 let categorias = [];
+let usuario_id = null; // Esto debería venir de tu sistema de autenticación
 
 // Función para obtener las categorías desde la API
 function obtenerCategorias() {
-  fetch("http://localhost:5000/api/categorias/")
+  // Obtener el ID del usuario de alguna parte (localStorage, sessionStorage, etc.)
+  usuario_id = localStorage.getItem("usuario_id") || 1; // Ejemplo, ajusta según tu sistema
+
+  fetch(`http://localhost:5000/api/categorias/usuario/${usuario_id}`)
     .then((response) => response.json())
     .then((data) => {
       console.log("Datos recibidos:", data);
@@ -15,7 +19,230 @@ function obtenerCategorias() {
     });
 }
 
-// Función para procesar los datos de la API y convertirlos al formato requerido
+// Función para agregar una nueva categoría
+function addCategoria() {
+  const nombreCategoria = prompt("Ingresa el nombre de la nueva categoría:");
+
+  if (nombreCategoria && nombreCategoria.trim() !== "") {
+    // Crear objeto con datos para enviar al servidor
+    const categoriaData = {
+      nombre: nombreCategoria.trim(),
+      categoria_padre_id: null,
+      usuario_id: usuario_id,
+    };
+
+    // Enviar datos al servidor
+    fetch("http://localhost:5000/api/categorias", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoriaData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Categoría creada:", data);
+        // Recargar categorías después de agregar
+        obtenerCategorias();
+      })
+      .catch((error) => {
+        console.error("Error al crear categoría:", error);
+      });
+  }
+}
+
+// Función para editar una categoría
+function editarCategoria(categoriaId) {
+  // Buscar la categoría tanto en el array local como por ID
+  const categoria = categorias.find((cat) =>
+    cat.subcategorias.length === 0
+      ? cat.id === categoriaId
+      : cat.id === categoriaId ||
+        cat.subcategorias.some((sub) => sub.id === categoriaId)
+  );
+
+  if (categoria) {
+    // Verificar si es una categoría por defecto (usuario_id = 0)
+    if (categoria.usuario_id === 0) {
+      alert("No se pueden modificar las categorías por defecto.");
+      return;
+    }
+
+    const nuevoNombre = prompt(
+      "Editar nombre de la categoría:",
+      categoria.nombre
+    );
+
+    if (nuevoNombre && nuevoNombre.trim() !== "") {
+      // Crear objeto con datos para enviar al servidor
+      const categoriaData = {
+        nombre: nuevoNombre.trim(),
+        usuario_id: usuario_id,
+      };
+
+      // Enviar datos al servidor
+      fetch(`http://localhost:5000/api/categorias/${categoriaId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(categoriaData),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error en la respuesta del servidor");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Categoría actualizada:", data);
+          // Recargar categorías después de editar
+          obtenerCategorias();
+        })
+        .catch((error) => {
+          console.error("Error al actualizar categoría:", error);
+          alert(
+            "No se pudo actualizar la categoría. Puede que no tengas permisos para modificarla."
+          );
+        });
+    }
+  }
+}
+
+// Función para eliminar una categoría
+function eliminarCategoria(categoriaId) {
+  // Buscar la categoría para verificar si es por defecto
+  const categoria = categorias.find((cat) => cat.id === categoriaId);
+
+  if (categoria && categoria.usuario_id === 0) {
+    alert("No se pueden eliminar las categorías por defecto.");
+    return;
+  }
+
+  if (
+    confirm(
+      "¿Estás seguro de que deseas eliminar esta categoría y todas sus subcategorías?"
+    )
+  ) {
+    // Enviar solicitud de eliminación al servidor
+    fetch(`http://localhost:5000/api/categorias/${categoriaId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ usuario_id: usuario_id }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la respuesta del servidor");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Categoría eliminada:", data);
+        // Recargar categorías después de eliminar
+        obtenerCategorias();
+      })
+      .catch((error) => {
+        console.error("Error al eliminar categoría:", error);
+        alert(
+          "No se pudo eliminar la categoría. Puede que no tengas permisos para eliminarla."
+        );
+      });
+  }
+}
+
+// Función para agregar una subcategoría
+function addSubcategoria(categoriaId) {
+  // Buscar la categoría principal para verificar si es por defecto
+  const categoria = categorias.find((cat) => cat.id === categoriaId);
+
+  if (categoria && categoria.usuario_id === 0) {
+    alert("No se pueden agregar subcategorías a las categorías por defecto.");
+    return;
+  }
+
+  const nombreSubcategoria = prompt(
+    "Ingresa el nombre de la nueva subcategoría:"
+  );
+
+  if (nombreSubcategoria && nombreSubcategoria.trim() !== "") {
+    // Crear objeto con datos para enviar al servidor
+    const subcategoriaData = {
+      nombre: nombreSubcategoria.trim(),
+      categoria_padre_id: categoriaId,
+      usuario_id: usuario_id,
+    };
+
+    // Enviar datos al servidor
+    fetch("http://localhost:5000/api/categorias", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(subcategoriaData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Subcategoría creada:", data);
+        // Recargar categorías después de agregar
+        obtenerCategorias();
+      })
+      .catch((error) => {
+        console.error("Error al crear subcategoría:", error);
+      });
+  }
+}
+
+// Función para crear el header de la tarjeta de categoría
+function crearCategoriaHeader(categoria) {
+  const header = document.createElement("div");
+  header.className = "categoria-card-header";
+
+  // Crear el título de la categoría
+  const titulo = document.createElement("h3");
+  titulo.className = "categoria-name";
+  titulo.textContent = categoria.nombre;
+
+  // Agregar un indicador visual si es una categoría por defecto
+  if (categoria.usuario_id === 0) {
+    titulo.classList.add("categoria-default");
+    // También puedes agregar un pequeño badge o icono
+    const defaultBadge = document.createElement("span");
+    defaultBadge.className = "default-badge";
+    defaultBadge.textContent = "Default";
+    titulo.appendChild(defaultBadge);
+  }
+
+  // Crear el contenedor de botones
+  const botonesContainer = document.createElement("div");
+  botonesContainer.className = "categoria-btns-container";
+
+  // Mostrar botones solo si no es una categoría por defecto
+  if (categoria.usuario_id !== 0) {
+    // Botón de editar
+    const botonEditar = crearIcono("edit", "edit-btn", () =>
+      editarCategoria(categoria.id)
+    );
+
+    // Botón de eliminar
+    const botonEliminar = crearIcono("delete", "delete-btn", () =>
+      eliminarCategoria(categoria.id)
+    );
+
+    // Agregar botones al contenedor
+    botonesContainer.appendChild(botonEditar);
+    botonesContainer.appendChild(botonEliminar);
+  }
+
+  // Agregar elementos al header
+  header.appendChild(titulo);
+  header.appendChild(botonesContainer);
+
+  return header;
+}
+
+// Actualizar la función procesarDatosAPI para incluir el usuario_id
 function procesarDatosAPI(data) {
   // Resetear categorías
   categorias = [];
@@ -33,12 +260,14 @@ function procesarDatosAPI(data) {
         return {
           id: subcat.categoria_id,
           nombre: subcat.nombre,
+          usuario_id: subcat.usuario_id, // Importante: Incluir el usuario_id
         };
       });
 
     const categoria = {
       id: catPrincipal.categoria_id,
       nombre: catPrincipal.nombre,
+      usuario_id: catPrincipal.usuario_id, // Importante: Incluir el usuario_id
       subcategorias: subcategorias,
     };
 
@@ -47,286 +276,3 @@ function procesarDatosAPI(data) {
 
   console.log("Categorías procesadas:", categorias);
 }
-
-// Función para generar IDs únicos
-function generarID() {
-  return Date.now();
-}
-
-// Función para agregar una nueva categoría
-function addCategoria() {
-  const nombreCategoria = prompt("Ingresa el nombre de la nueva categoría:");
-
-  if (nombreCategoria && nombreCategoria.trim() !== "") {
-    const nuevaCategoria = {
-      id: generarID(),
-      nombre: nombreCategoria.trim(),
-      subcategorias: [],
-    };
-
-    categorias.push(nuevaCategoria);
-    renderizarCategorias();
-
-    // Aquí podrías añadir código para enviar la nueva categoría al servidor
-    // mediante una petición POST a tu API
-  }
-}
-
-// Función para editar una categoría
-function editarCategoria(categoriaId) {
-  const categoria = categorias.find((cat) => cat.id === categoriaId);
-
-  if (categoria) {
-    const nuevoNombre = prompt(
-      "Editar nombre de la categoría:",
-      categoria.nombre
-    );
-
-    if (nuevoNombre && nuevoNombre.trim() !== "") {
-      categoria.nombre = nuevoNombre.trim();
-      renderizarCategorias();
-
-      // Aquí podrías añadir código para actualizar la categoría en el servidor
-      // mediante una petición PUT a tu API
-    }
-  }
-}
-
-// Función para eliminar una categoría
-function eliminarCategoria(categoriaId) {
-  if (
-    confirm(
-      "¿Estás seguro de que deseas eliminar esta categoría y todas sus subcategorías?"
-    )
-  ) {
-    categorias = categorias.filter((cat) => cat.id !== categoriaId);
-    renderizarCategorias();
-
-    // Aquí podrías añadir código para eliminar la categoría en el servidor
-    // mediante una petición DELETE a tu API
-  }
-}
-
-// Función para agregar una subcategoría
-function addSubcategoria(categoriaId) {
-  const categoria = categorias.find((cat) => cat.id === categoriaId);
-
-  if (categoria) {
-    const nombreSubcategoria = prompt(
-      "Ingresa el nombre de la nueva subcategoría:"
-    );
-
-    if (nombreSubcategoria && nombreSubcategoria.trim() !== "") {
-      const nuevaSubcategoria = {
-        id: generarID(),
-        nombre: nombreSubcategoria.trim(),
-      };
-
-      categoria.subcategorias.push(nuevaSubcategoria);
-      renderizarCategorias();
-
-      // Aquí podrías añadir código para enviar la nueva subcategoría al servidor
-      // mediante una petición POST a tu API
-    }
-  }
-}
-
-// Función para editar una subcategoría
-function editarSubcategoria(categoriaId, subcategoriaId) {
-  const categoria = categorias.find((cat) => cat.id === categoriaId);
-
-  if (categoria) {
-    const subcategoria = categoria.subcategorias.find(
-      (sub) => sub.id === subcategoriaId
-    );
-
-    if (subcategoria) {
-      const nuevoNombre = prompt(
-        "Editar nombre de la subcategoría:",
-        subcategoria.nombre
-      );
-
-      if (nuevoNombre && nuevoNombre.trim() !== "") {
-        subcategoria.nombre = nuevoNombre.trim();
-        renderizarCategorias();
-
-        // Aquí podrías añadir código para actualizar la subcategoría en el servidor
-        // mediante una petición PUT a tu API
-      }
-    }
-  }
-}
-
-// Función para eliminar una subcategoría
-function eliminarSubcategoria(categoriaId, subcategoriaId) {
-  const categoria = categorias.find((cat) => cat.id === categoriaId);
-
-  if (
-    categoria &&
-    confirm("¿Estás seguro de que deseas eliminar esta subcategoría?")
-  ) {
-    categoria.subcategorias = categoria.subcategorias.filter(
-      (sub) => sub.id !== subcategoriaId
-    );
-    renderizarCategorias();
-
-    // Aquí podrías añadir código para eliminar la subcategoría en el servidor
-    // mediante una petición DELETE a tu API
-  }
-}
-
-// Función para crear un icono con texto
-function crearIcono(texto, clase, funcionOnClick) {
-  const span = document.createElement("span");
-  span.className = `material-symbols-outlined ${clase}`;
-  span.textContent = texto;
-
-  if (funcionOnClick) {
-    span.onclick = funcionOnClick;
-  }
-
-  return span;
-}
-
-// Función para crear el header de la tarjeta de categoría
-function crearCategoriaHeader(categoria) {
-  const header = document.createElement("div");
-  header.className = "categoria-card-header";
-
-  // Crear el título de la categoría
-  const titulo = document.createElement("h3");
-  titulo.className = "categoria-name";
-  titulo.textContent = categoria.nombre;
-
-  // Crear el contenedor de botones
-  const botonesContainer = document.createElement("div");
-  botonesContainer.className = "categoria-btns-container";
-
-  // Botón de editar
-  const botonEditar = crearIcono("edit", "edit-btn", () =>
-    editarCategoria(categoria.id)
-  );
-
-  // Botón de eliminar
-  const botonEliminar = crearIcono("delete", "delete-btn", () =>
-    eliminarCategoria(categoria.id)
-  );
-
-  // Agregar botones al contenedor
-  botonesContainer.appendChild(botonEditar);
-  botonesContainer.appendChild(botonEliminar);
-
-  // Agregar elementos al header
-  header.appendChild(titulo);
-  header.appendChild(botonesContainer);
-
-  return header;
-}
-
-// Función para crear una subcategoría
-function crearSubcategoria(categoria, subcategoria) {
-  const subcategoriaDiv = document.createElement("div");
-  subcategoriaDiv.className = "subcategoria";
-  subcategoriaDiv.dataset.id = subcategoria.id;
-
-  // Nombre de la subcategoría
-  const nombre = document.createElement("p");
-  nombre.className = "subcategoria-name";
-  nombre.textContent = subcategoria.nombre;
-
-  // Contenedor de botones
-  const botonesContainer = document.createElement("div");
-  botonesContainer.className = "subcategoria-btns-container";
-
-  // Botón de editar
-  const botonEditar = crearIcono("edit", "edit-btn", () =>
-    editarSubcategoria(categoria.id, subcategoria.id)
-  );
-
-  // Botón de eliminar
-  const botonEliminar = crearIcono("delete", "delete-btn", () =>
-    eliminarSubcategoria(categoria.id, subcategoria.id)
-  );
-
-  // Agregar botones al contenedor
-  botonesContainer.appendChild(botonEditar);
-  botonesContainer.appendChild(botonEliminar);
-
-  // Agregar elementos a la subcategoría
-  subcategoriaDiv.appendChild(nombre);
-  subcategoriaDiv.appendChild(botonesContainer);
-
-  return subcategoriaDiv;
-}
-
-// Función para crear el contenedor de subcategorías
-function crearSubcategoriasContainer(categoria) {
-  const container = document.createElement("div");
-  container.className = "subcategorias-container";
-
-  // Agregar cada subcategoría
-  categoria.subcategorias.forEach((subcategoria) => {
-    const subcategoriaElement = crearSubcategoria(categoria, subcategoria);
-    container.appendChild(subcategoriaElement);
-  });
-
-  return container;
-}
-
-// Función para crear el botón de agregar subcategoría
-function crearBotonAgregarSubcategoria(categoriaId) {
-  const container = document.createElement("div");
-  container.className = "categoria-card-btn-container";
-
-  const botonAgregar = crearIcono("add", "add-btn", () =>
-    addSubcategoria(categoriaId)
-  );
-
-  container.appendChild(botonAgregar);
-
-  return container;
-}
-
-// Función para crear una tarjeta de categoría completa
-function crearCategoriaCard(categoria) {
-  const card = document.createElement("div");
-  card.className = "categoria-card";
-  card.dataset.id = categoria.id;
-
-  // Crear y agregar el header
-  const header = crearCategoriaHeader(categoria);
-  card.appendChild(header);
-
-  // Crear y agregar el contenedor de subcategorías
-  const subcategoriasContainer = crearSubcategoriasContainer(categoria);
-  card.appendChild(subcategoriasContainer);
-
-  // Crear y agregar el botón para agregar subcategorías
-  const botonAgregar = crearBotonAgregarSubcategoria(categoria.id);
-  card.appendChild(botonAgregar);
-
-  return card;
-}
-
-// Función principal para renderizar todas las categorías
-function renderizarCategorias() {
-  const contenedor = document.querySelector(".categorias-cards-container");
-  contenedor.innerHTML = ""; // Limpiar el contenedor
-
-  // Crear y agregar cada tarjeta de categoría
-  categorias.forEach((categoria) => {
-    const categoriaCard = crearCategoriaCard(categoria);
-    contenedor.appendChild(categoriaCard);
-  });
-}
-
-// Al cargar la página, obtener categorías de la API
-document.addEventListener("DOMContentLoaded", () => {
-  obtenerCategorias();
-
-  // Agregar event listener para el botón de agregar categoría
-  const addCategoriaBtn = document.getElementById("addCategoriaBtn");
-  if (addCategoriaBtn) {
-    addCategoriaBtn.addEventListener("click", addCategoria);
-  }
-});

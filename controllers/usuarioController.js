@@ -1,22 +1,26 @@
 const pool = require("../models/db");
+const bcrypt = require("bcryptjs");
 
-// Funcion Obtener Todos los Usuarios
+// Get all users
 exports.getAllUsuarios = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM Usuarios");
+    const [rows] = await pool.query(
+      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM Usuarios"
+    );
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: "Fallo al buscar todos los usuarios" });
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener usuarios" });
   }
 };
 
-// Funcion Obtener Usuario por ID
+// Get a user by ID
 exports.getUsuarioById = async (req, res) => {
   const { id } = req.params;
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM Usuarios WHERE usuario_id = ?",
+      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM Usuarios WHERE usuario_id = ?",
       [id]
     );
     if (rows.length === 0)
@@ -24,47 +28,62 @@ exports.getUsuarioById = async (req, res) => {
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: "Fallo en el fetch de usuario" });
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener usuario" });
   }
 };
 
-// Funcion Crear Usuario
+// Create a new user
 exports.createUsuario = async (req, res) => {
-  const { nombre, apellido, nickname, email } = req.body;
+  const { nombre, apellido, nickname, email, password } = req.body;
 
-  if (!nombre || !apellido || !nickname || !email) {
-    return res.status(400).json({ error: "All fields are required" });
+  if (!nombre || !apellido || !email || !password) {
+    return res.status(400).json({ error: "Faltan campos requeridos" });
   }
 
   try {
-    const [result] = await pool.query(
+    // Verificar si el email ya existe
+    const [existingUser] = await pool.query(
+      "SELECT * FROM Usuarios WHERE email = ?",
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: "El email ya está registrado" });
+    }
+
+    // Hashear contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insertar usuario
+    const [usuarioResult] = await pool.query(
       "INSERT INTO Usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
-      [nombre, apellido, nickname, email]
+      [nombre, apellido, nickname || null, email]
+    );
+
+    // Insertar credenciales de autenticación
+    await pool.query(
+      "INSERT INTO Auth (usuario_id, password_hash) VALUES (?, ?)",
+      [usuarioResult.insertId, hashedPassword]
     );
 
     res.status(201).json({
-      message: "User created successfully",
-      usuario_id: result.insertId,
+      message: "Usuario creado exitosamente",
+      usuario_id: usuarioResult.insertId,
     });
   } catch (error) {
-    if (error.code === "ER_DUP_ENTRY") {
-      return res
-        .status(409)
-        .json({ error: "Duplicate entry. Nickname or email already exists." });
-    }
-    res.status(500).json({ error: "Failed to create user" });
+    console.error(error);
+    res.status(500).json({ error: "Error al crear usuario" });
   }
 };
 
-// Funcion Update Usuario
+// Update an existing user
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, nickname, email } = req.body;
 
   if (!nombre && !apellido && !nickname && !email) {
-    return res
-      .status(400)
-      .json({ error: "Sin datos para updatear, no hay update" });
+    return res.status(400).json({ error: "No hay datos para actualizar" });
   }
 
   const updates = [];
@@ -78,11 +97,21 @@ exports.updateUsuario = async (req, res) => {
     updates.push("apellido = ?");
     values.push(apellido);
   }
-  if (nickname) {
+  if (nickname !== undefined) {
     updates.push("nickname = ?");
-    values.push(nickname);
+    values.push(nickname || null);
   }
   if (email) {
+    // Verificar si el email ya existe (si está cambiando)
+    const [existingUser] = await pool.query(
+      "SELECT * FROM Usuarios WHERE email = ? AND usuario_id != ?",
+      [email, id]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: "El email ya está en uso" });
+    }
+
     updates.push("email = ?");
     values.push(email);
   }
@@ -101,19 +130,20 @@ exports.updateUsuario = async (req, res) => {
 
     res.status(200).json({ message: "Usuario actualizado exitosamente" });
   } catch (error) {
-    if (error.code === "ER_DUP_ENTRY") {
-      return res
-        .status(409)
-        .json({ error: "Duplicado. Ese correo o nickname ya existen." });
-    }
-    res.status(500).json({ error: "Fallo al actualizar usuario" });
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar usuario" });
   }
 };
 
+// Delete a user
 exports.deleteUsuario = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Primero eliminar registros relacionados en Auth
+    await pool.query("DELETE FROM Auth WHERE usuario_id = ?", [id]);
+
+    // Luego eliminar el usuario
     const [result] = await pool.query(
       "DELETE FROM Usuarios WHERE usuario_id = ?",
       [id]
@@ -125,6 +155,7 @@ exports.deleteUsuario = async (req, res) => {
 
     res.status(200).json({ message: "Usuario eliminado exitosamente" });
   } catch (error) {
-    res.status(500).json({ error: "Fallo al eliminar usuario" });
+    console.error(error);
+    res.status(500).json({ error: "Error al eliminar usuario" });
   }
 };
