@@ -1,7 +1,6 @@
 const pool = require("../models/db");
 const bcrypt = require("bcryptjs");
 
-// Get all users
 exports.getAllUsuarios = async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -14,7 +13,6 @@ exports.getAllUsuarios = async (req, res) => {
   }
 };
 
-// Get a user by ID
 exports.getUsuarioById = async (req, res) => {
   const { id } = req.params;
 
@@ -33,7 +31,6 @@ exports.getUsuarioById = async (req, res) => {
   }
 };
 
-// Create a new user
 exports.createUsuario = async (req, res) => {
   const { nombre, apellido, nickname, email, password } = req.body;
 
@@ -42,7 +39,6 @@ exports.createUsuario = async (req, res) => {
   }
 
   try {
-    // Verificar si el email ya existe
     const [existingUser] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ?",
       [email]
@@ -52,16 +48,13 @@ exports.createUsuario = async (req, res) => {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    // Hashear contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insertar usuario
     const [usuarioResult] = await pool.query(
       "INSERT INTO usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
       [nombre, apellido, nickname || null, email]
     );
 
-    // Insertar credenciales de autenticación
     await pool.query(
       "INSERT INTO Auth (usuario_id, password_hash) VALUES (?, ?)",
       [usuarioResult.insertId, hashedPassword]
@@ -77,7 +70,6 @@ exports.createUsuario = async (req, res) => {
   }
 };
 
-// Update an existing user
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
   const { nombre, apellido, nickname, email } = req.body;
@@ -102,7 +94,6 @@ exports.updateUsuario = async (req, res) => {
     values.push(nickname || null);
   }
   if (email) {
-    // Verificar si el email ya existe (si está cambiando)
     const [existingUser] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ? AND usuario_id != ?",
       [email, id]
@@ -140,10 +131,8 @@ exports.deleteUsuario = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Primero eliminar registros relacionados en Auth
-    await pool.query("DELETE FROM Auth WHERE usuario_id = ?", [id]);
+    await pool.query("DELETE FROM auth WHERE usuario_id = ?", [id]);
 
-    // Luego eliminar el usuario
     const [result] = await pool.query(
       "DELETE FROM usuarios WHERE usuario_id = ?",
       [id]

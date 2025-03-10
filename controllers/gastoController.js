@@ -1,6 +1,5 @@
 const pool = require("../models/db");
 
-// Get all expenses
 exports.getAllGastos = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM gastos");
@@ -10,8 +9,6 @@ exports.getAllGastos = async (req, res) => {
   }
 };
 
-// Get an expense by ID
-// Get expenses by user ID
 exports.getGastoById = async (req, res) => {
   const { id } = req.params;
 
@@ -36,7 +33,7 @@ exports.getGastoById = async (req, res) => {
       [id]
     );
 
-    console.log(rows); // Verifica los datos obtenidos de la base de datos
+    console.log(rows);
     if (rows.length === 0)
       return res.status(404).json({ error: "Gasto no encontrado" });
 
@@ -46,8 +43,6 @@ exports.getGastoById = async (req, res) => {
   }
 };
 
-// Create a new expense
-// Modifica la función createGasto en tu controlador
 exports.createGasto = async (req, res) => {
   const { usuario_id, categoria_id, monto, descripcion, fecha_gasto } =
     req.body;
@@ -80,7 +75,6 @@ exports.createGasto = async (req, res) => {
   }
 };
 
-// Update an existing expense
 exports.updateGasto = async (req, res) => {
   const { id } = req.params;
   const { monto, descripcion } = req.body;

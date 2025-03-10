@@ -1,6 +1,5 @@
 const pool = require("../models/db");
 
-// Get all categories (filtered by user_id when provided)
 exports.getAllCategorias = async (req, res) => {
   const usuario_id = req.query.usuario_id || req.user?.id;
 
@@ -8,7 +7,6 @@ exports.getAllCategorias = async (req, res) => {
     let query = "SELECT * FROM categorias";
     let params = [];
 
-    // Si se proporciona un usuario_id, filtrar por ese usuario y las categorías por defecto
     if (usuario_id) {
       query = "SELECT * FROM categorias WHERE usuario_id = ? OR usuario_id = 0";
       params = [usuario_id];
@@ -22,7 +20,6 @@ exports.getAllCategorias = async (req, res) => {
   }
 };
 
-// Get a category by ID
 exports.getCategoriaById = async (req, res) => {
   const { id } = req.params;
 
@@ -40,7 +37,6 @@ exports.getCategoriaById = async (req, res) => {
   }
 };
 
-// Get categories for a user (both default and user-created)
 exports.getCategoriasByUserId = async (req, res) => {
   const { usuario_id } = req.params;
 
@@ -62,7 +58,6 @@ exports.getCategoriasByUserId = async (req, res) => {
   }
 };
 
-// Create a new category
 exports.createCategoria = async (req, res) => {
   const { nombre, categoria_padre_id, usuario_id } = req.body;
 
@@ -90,11 +85,10 @@ exports.createCategoria = async (req, res) => {
   }
 };
 
-// Update an existing category
 exports.updateCategoria = async (req, res) => {
   const { id } = req.params;
   const { nombre, categoria_padre_id } = req.body;
-  const usuario_id = req.body.usuario_id || req.user?.id; // Asumiendo que tienes middleware de autenticación
+  const usuario_id = req.body.usuario_id || req.user?.id;
 
   if (!nombre && !categoria_padre_id) {
     return res
@@ -102,7 +96,6 @@ exports.updateCategoria = async (req, res) => {
       .json({ error: "At least one field is required for update" });
   }
 
-  // Primero verificar que la categoría pertenece al usuario
   try {
     const [categoryRows] = await pool.query(
       "SELECT * FROM categorias WHERE categoria_id = ?",
@@ -113,14 +106,12 @@ exports.updateCategoria = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // Si la categoría tiene usuario_id = 0 (default), no permitir edición
     if (categoryRows[0].usuario_id === 0) {
       return res
         .status(403)
         .json({ error: "Default categories cannot be modified" });
     }
 
-    // Si el usuario_id no coincide con el de la categoría, no permitir edición
     if (usuario_id && categoryRows[0].usuario_id !== usuario_id) {
       return res
         .status(403)
@@ -162,7 +153,6 @@ exports.updateCategoria = async (req, res) => {
   }
 };
 
-// Delete a category
 exports.deleteCategoria = async (req, res) => {
   const { id } = req.params;
   const usuario_id = req.body.usuario_id || req.user?.id; // Asumiendo que tienes middleware de autenticación

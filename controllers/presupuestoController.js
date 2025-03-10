@@ -1,6 +1,5 @@
 const pool = require("../models/db");
 
-// Get all budgets
 exports.getAllPresupuestos = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM presupuestos");
@@ -10,7 +9,6 @@ exports.getAllPresupuestos = async (req, res) => {
   }
 };
 
-// Get a budget by ID
 exports.getPresupuestoById = async (req, res) => {
   const { id } = req.params;
 
@@ -28,12 +26,10 @@ exports.getPresupuestoById = async (req, res) => {
   }
 };
 
-// Get budgets by user ID
 exports.getPresupuestosByUserId = async (req, res) => {
   const { usuario_id } = req.params;
 
   try {
-    // First, verify the user exists (optional but recommended)
     const [userCheck] = await pool.query(
       "SELECT * FROM usuarios WHERE usuario_id = ?",
       [usuario_id]
@@ -43,13 +39,11 @@ exports.getPresupuestosByUserId = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    // Retrieve budgets for the specific user
     const [budgets] = await pool.query(
       "SELECT * FROM presupuestos WHERE usuario_id = ?",
       [usuario_id]
     );
 
-    // If no budgets found, return an empty array instead of an error
     res.status(200).json(budgets);
   } catch (error) {
     res
@@ -58,7 +52,6 @@ exports.getPresupuestosByUserId = async (req, res) => {
   }
 };
 
-// Create a new budget
 exports.createPresupuesto = async (req, res) => {
   const { usuario_id, monto } = req.body;
 
@@ -83,7 +76,6 @@ exports.createPresupuesto = async (req, res) => {
   }
 };
 
-// Update an existing budget
 exports.updatePresupuesto = async (req, res) => {
   const { id } = req.params;
   const { monto } = req.body;
@@ -108,7 +100,6 @@ exports.updatePresupuesto = async (req, res) => {
   }
 };
 
-// Delete a budget
 exports.deletePresupuesto = async (req, res) => {
   const { id } = req.params;
 
