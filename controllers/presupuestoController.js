@@ -3,7 +3,7 @@ const pool = require("../models/db");
 // Get all budgets
 exports.getAllPresupuestos = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM Presupuestos");
+    const [rows] = await pool.query("SELECT * FROM presupuestos");
     res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ error: "Fallo al obtener presupuestos" });
@@ -16,7 +16,7 @@ exports.getPresupuestoById = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM Presupuestos WHERE presupuesto_id = ?",
+      "SELECT * FROM presupuestos WHERE presupuesto_id = ?",
       [id]
     );
     if (rows.length === 0)
@@ -35,7 +35,7 @@ exports.getPresupuestosByUserId = async (req, res) => {
   try {
     // First, verify the user exists (optional but recommended)
     const [userCheck] = await pool.query(
-      "SELECT * FROM Usuarios WHERE usuario_id = ?",
+      "SELECT * FROM usuarios WHERE usuario_id = ?",
       [usuario_id]
     );
 
@@ -45,7 +45,7 @@ exports.getPresupuestosByUserId = async (req, res) => {
 
     // Retrieve budgets for the specific user
     const [budgets] = await pool.query(
-      "SELECT * FROM Presupuestos WHERE usuario_id = ?",
+      "SELECT * FROM presupuestos WHERE usuario_id = ?",
       [usuario_id]
     );
 
@@ -70,7 +70,7 @@ exports.createPresupuesto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO Presupuestos (usuario_id, monto) VALUES (?, ?)",
+      "INSERT INTO presupuestos (usuario_id, monto) VALUES (?, ?)",
       [usuario_id, monto]
     );
 
@@ -94,7 +94,7 @@ exports.updatePresupuesto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "UPDATE Presupuestos SET monto = ? WHERE presupuesto_id = ?",
+      "UPDATE presupuestos SET monto = ? WHERE presupuesto_id = ?",
       [monto, id]
     );
 
@@ -114,7 +114,7 @@ exports.deletePresupuesto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "DELETE FROM Presupuestos WHERE presupuesto_id = ?",
+      "DELETE FROM presupuestos WHERE presupuesto_id = ?",
       [id]
     );
 

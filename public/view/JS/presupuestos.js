@@ -2,7 +2,7 @@ const totalBudgetElement = document.getElementById("totalBudget");
 const budgetChangeForm = document.getElementById("budget-change-form");
 const budgetList = document.querySelector(".budget-list");
 
-const API_URL = "http://localhost:5000/api/presupuestos/user/";
+const API_URL = "http://localhost:3000/api/presupuestos/user/";
 
 const userAvatar = document.querySelector(".user-avatar");
 
@@ -98,7 +98,7 @@ async function createBudget(amount) {
       fecha_asignacion: new Date().toISOString().split("T")[0],
     };
 
-    const response = await fetch("http://localhost:5000/api/presupuestos/", {
+    const response = await fetch("http://localhost:3000/api/presupuestos/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

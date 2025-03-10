@@ -79,7 +79,7 @@ async function fetchGastos() {
   }
 
   try {
-    const response = await fetch(`http://localhost:5000/api/gastos/${userId}`);
+    const response = await fetch(`http://localhost:3000/api/gastos/${userId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -104,7 +104,7 @@ async function loadCategorias() {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/api/categorias/usuario/${userId}`
+      `http://localhost:3000/api/categorias/usuario/${userId}`
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -194,7 +194,7 @@ if (addExpenseForm) {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/gastos", {
+      const response = await fetch("http://localhost:3000/api/gastos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

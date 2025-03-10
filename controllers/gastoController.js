@@ -3,7 +3,7 @@ const pool = require("../models/db");
 // Get all expenses
 exports.getAllGastos = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM Gastos");
+    const [rows] = await pool.query("SELECT * FROM gastos");
     res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ error: "Error al fetchear Gastos" });
@@ -27,9 +27,9 @@ exports.getGastoById = async (req, res) => {
         g.fecha_gasto,
         c.nombre AS categoria_nombre,
         cp.nombre AS subcategoria_nombre
-      FROM Gastos g
-      LEFT JOIN Categorias c ON g.categoria_id = c.categoria_id
-      LEFT JOIN Categorias cp ON c.categoria_padre_id = cp.categoria_id
+      FROM gastos g
+      LEFT JOIN categorias c ON g.categoria_id = c.categoria_id
+      LEFT JOIN categorias cp ON c.categoria_padre_id = cp.categoria_id
       WHERE g.usuario_id = ?
       ORDER BY g.fecha_gasto DESC, g.gasto_id DESC
     `,
@@ -60,7 +60,7 @@ exports.createGasto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO Gastos (usuario_id, categoria_id, monto, descripcion, fecha_gasto) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO gastos (usuario_id, categoria_id, monto, descripcion, fecha_gasto) VALUES (?, ?, ?, ?, ?)",
       [
         usuario_id,
         categoria_id,
@@ -107,7 +107,7 @@ exports.updateGasto = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `UPDATE Gastos SET ${updates.join(", ")} WHERE gasto_id = ?`,
+      `UPDATE gastos SET ${updates.join(", ")} WHERE gasto_id = ?`,
       values
     );
 
@@ -126,7 +126,7 @@ exports.deleteGasto = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [result] = await pool.query("DELETE FROM Gastos WHERE gasto_id = ?", [
+    const [result] = await pool.query("DELETE FROM gastos WHERE gasto_id = ?", [
       id,
     ]);
 

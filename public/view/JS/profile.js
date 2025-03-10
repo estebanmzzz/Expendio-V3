@@ -25,4 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout);
   }
+
+  function editUserData() {
+    const userData = getUserData();
+    const newUserData = prompt("Introduce tus nuevos datos");
+    if (newUserData) {
+      userData.nombre = newUserData.nombre;
+      userData.apellido = newUserData.apellido;
+      userData.email = newUserData.email;
+      userData.nickname = newUserData.nickname;
+      sessionStorage.setItem("user", JSON.stringify(userData));
+    }
+  }
+  document.querySelector(".edit-btn").addEventListener("click", editUserData);
+
+  function deleteAccount() {
+    if (confirm("¿Estás seguro de que quieres eliminar tu cuenta?")) {
+      sessionStorage.clear();
+      window.location.href = "../index.html";
+    }
+  }
+  document.querySelector(".delete-account-btn").addEventListener("click", deleteAccount);
+
 });

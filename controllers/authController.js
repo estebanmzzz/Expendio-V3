@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
   try {
     // Verificar si el email ya existe
     const [existingUser] = await pool.query(
-      "SELECT * FROM Usuarios WHERE email = ?",
+      "SELECT * FROM usuarios WHERE email = ?",
       [email]
     );
 
@@ -46,13 +46,13 @@ exports.register = async (req, res) => {
     try {
       // Insertar usuario
       const [usuarioResult] = await connection.query(
-        "INSERT INTO Usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
+        "INSERT INTO usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
         [nombre, apellido, nickname || null, email]
       );
 
       // Insertar credenciales de autenticación
       await connection.query(
-        "INSERT INTO Auth (usuario_id, password_hash) VALUES (?, ?)",
+        "INSERT INTO auth (usuario_id, password_hash) VALUES (?, ?)",
         [usuarioResult.insertId, hashedPassword]
       );
 
@@ -91,8 +91,8 @@ exports.login = async (req, res) => {
     // Buscar usuario con información de autenticación
     const [rows] = await pool.query(
       "SELECT u.usuario_id, u.nombre, u.apellido, u.nickname, u.email, a.password_hash " +
-        "FROM Usuarios u " +
-        "JOIN Auth a ON u.usuario_id = a.usuario_id " +
+        "FROM usuarios u " +
+        "JOIN auth a ON u.usuario_id = a.usuario_id " +
         "WHERE u.email = ?",
       [email]
     );
@@ -146,7 +146,7 @@ exports.authenticateUser = async (req, res, next) => {
   try {
     // Obtener información del usuario desde la base de datos
     const [rows] = await pool.query(
-      "SELECT usuario_id, nombre, apellido, nickname, email FROM Usuarios WHERE usuario_id = ?",
+      "SELECT usuario_id, nombre, apellido, nickname, email FROM usuarios WHERE usuario_id = ?",
       [req.session.userId]
     );
 
@@ -197,7 +197,7 @@ exports.changePassword = async (req, res) => {
   try {
     // Obtener el hash de la contraseña actual
     const [rows] = await pool.query(
-      "SELECT password_hash FROM Auth WHERE usuario_id = ?",
+      "SELECT password_hash FROM auth WHERE usuario_id = ?",
       [userId]
     );
 
@@ -218,7 +218,7 @@ exports.changePassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Actualizar contraseña
-    await pool.query("UPDATE Auth SET password_hash = ? WHERE usuario_id = ?", [
+    await pool.query("UPDATE auth SET password_hash = ? WHERE usuario_id = ?", [
       hashedPassword,
       userId,
     ]);
@@ -260,7 +260,7 @@ exports.requestPasswordReset = async (req, res) => {
   try {
     // Verificar si el email existe
     const [rows] = await pool.query(
-      "SELECT usuario_id FROM Usuarios WHERE email = ?",
+      "SELECT usuario_id FROM usuarios WHERE email = ?",
       [email]
     );
 

@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getAllUsuarios = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM Usuarios"
+      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM usuarios"
     );
     res.status(200).json(rows);
   } catch (error) {
@@ -20,7 +20,7 @@ exports.getUsuarioById = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM Usuarios WHERE usuario_id = ?",
+      "SELECT usuario_id, nombre, apellido, nickname, email, fecha_registro FROM usuarios WHERE usuario_id = ?",
       [id]
     );
     if (rows.length === 0)
@@ -44,7 +44,7 @@ exports.createUsuario = async (req, res) => {
   try {
     // Verificar si el email ya existe
     const [existingUser] = await pool.query(
-      "SELECT * FROM Usuarios WHERE email = ?",
+      "SELECT * FROM usuarios WHERE email = ?",
       [email]
     );
 
@@ -57,7 +57,7 @@ exports.createUsuario = async (req, res) => {
 
     // Insertar usuario
     const [usuarioResult] = await pool.query(
-      "INSERT INTO Usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
+      "INSERT INTO usuarios (nombre, apellido, nickname, email) VALUES (?, ?, ?, ?)",
       [nombre, apellido, nickname || null, email]
     );
 
@@ -104,7 +104,7 @@ exports.updateUsuario = async (req, res) => {
   if (email) {
     // Verificar si el email ya existe (si está cambiando)
     const [existingUser] = await pool.query(
-      "SELECT * FROM Usuarios WHERE email = ? AND usuario_id != ?",
+      "SELECT * FROM usuarios WHERE email = ? AND usuario_id != ?",
       [email, id]
     );
 
@@ -120,7 +120,7 @@ exports.updateUsuario = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `UPDATE Usuarios SET ${updates.join(", ")} WHERE usuario_id = ?`,
+      `UPDATE usuarios SET ${updates.join(", ")} WHERE usuario_id = ?`,
       values
     );
 
@@ -145,7 +145,7 @@ exports.deleteUsuario = async (req, res) => {
 
     // Luego eliminar el usuario
     const [result] = await pool.query(
-      "DELETE FROM Usuarios WHERE usuario_id = ?",
+      "DELETE FROM usuarios WHERE usuario_id = ?",
       [id]
     );
 

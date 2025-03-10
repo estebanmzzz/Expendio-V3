@@ -5,12 +5,12 @@ exports.getAllCategorias = async (req, res) => {
   const usuario_id = req.query.usuario_id || req.user?.id;
 
   try {
-    let query = "SELECT * FROM Categorias";
+    let query = "SELECT * FROM categorias";
     let params = [];
 
     // Si se proporciona un usuario_id, filtrar por ese usuario y las categorías por defecto
     if (usuario_id) {
-      query = "SELECT * FROM Categorias WHERE usuario_id = ? OR usuario_id = 0";
+      query = "SELECT * FROM categorias WHERE usuario_id = ? OR usuario_id = 0";
       params = [usuario_id];
     }
 
@@ -28,7 +28,7 @@ exports.getCategoriaById = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM Categorias WHERE categoria_id = ?",
+      "SELECT * FROM categorias WHERE categoria_id = ?",
       [id]
     );
     if (rows.length === 0)
@@ -46,7 +46,7 @@ exports.getCategoriasByUserId = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM Categorias WHERE usuario_id = ? OR usuario_id = 0",
+      "SELECT * FROM categorias WHERE usuario_id = ? OR usuario_id = 0",
       [usuario_id]
     );
 
@@ -76,7 +76,7 @@ exports.createCategoria = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "INSERT INTO Categorias (nombre, categoria_padre_id, usuario_id) VALUES (?, ?, ?)",
+      "INSERT INTO categorias (nombre, categoria_padre_id, usuario_id) VALUES (?, ?, ?)",
       [nombre, categoria_padre_id || null, usuario_id]
     );
 
@@ -105,7 +105,7 @@ exports.updateCategoria = async (req, res) => {
   // Primero verificar que la categoría pertenece al usuario
   try {
     const [categoryRows] = await pool.query(
-      "SELECT * FROM Categorias WHERE categoria_id = ?",
+      "SELECT * FROM categorias WHERE categoria_id = ?",
       [id]
     );
 
@@ -147,7 +147,7 @@ exports.updateCategoria = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `UPDATE Categorias SET ${updates.join(", ")} WHERE categoria_id = ?`,
+      `UPDATE categorias SET ${updates.join(", ")} WHERE categoria_id = ?`,
       values
     );
 
@@ -170,7 +170,7 @@ exports.deleteCategoria = async (req, res) => {
   // Primero verificar que la categoría pertenece al usuario
   try {
     const [categoryRows] = await pool.query(
-      "SELECT * FROM Categorias WHERE categoria_id = ?",
+      "SELECT * FROM categorias WHERE categoria_id = ?",
       [id]
     );
 
@@ -198,7 +198,7 @@ exports.deleteCategoria = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "DELETE FROM Categorias WHERE categoria_id = ? AND usuario_id != 0",
+      "DELETE FROM categorias WHERE categoria_id = ? AND usuario_id != 0",
       [id]
     );
 

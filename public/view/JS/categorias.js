@@ -51,7 +51,7 @@ function getUserId() {
 function obtenerCategorias(usuario_id) {
   console.log("Obteniendo categorías para usuario:", usuario_id);
 
-  fetch(`http://localhost:5000/api/categorias/usuario/${usuario_id}`)
+  fetch(`http://localhost:3000/api/categorias/usuario/${usuario_id}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error(
@@ -92,7 +92,7 @@ function addCategoria() {
       usuario_id: usuario_id,
     };
 
-    fetch("http://localhost:5000/api/categorias", {
+    fetch("http://localhost:3000/api/categorias", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -150,7 +150,7 @@ function editarCategoria(categoriaId) {
       usuario_id: usuario_id,
     };
 
-    fetch(`http://localhost:5000/api/categorias/${categoriaId}`, {
+    fetch(`http://localhost:3000/api/categorias/${categoriaId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -219,7 +219,7 @@ function eliminarCategoria(categoriaId) {
       "¿Estás seguro de que deseas eliminar esta categoría y todas sus subcategorías?"
     )
   ) {
-    fetch(`http://localhost:5000/api/categorias/${categoriaId}`, {
+    fetch(`http://localhost:3000/api/categorias/${categoriaId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -279,7 +279,7 @@ function addSubcategoria(categoriaId) {
       usuario_id: usuario_id,
     };
 
-    fetch("http://localhost:5000/api/categorias", {
+    fetch("http://localhost:3000/api/categorias", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -319,7 +319,7 @@ function crearCategoriaHeader(categoria) {
     titulo.classList.add("categoria-default");
     const defaultBadge = document.createElement("span");
     defaultBadge.className = "default-badge";
-    defaultBadge.textContent = "Default";
+    defaultBadge.textContent = "";
     titulo.appendChild(defaultBadge);
   }
 
@@ -385,6 +385,7 @@ function procesarDatosAPI(data) {
       id: catPrincipal.categoria_id,
       nombre: catPrincipal.nombre,
       usuario_id: catPrincipal.usuario_id,
+      subcategorias: subcategorias,
     };
 
     categorias.push(categoria);
