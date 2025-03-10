@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const gastoController = require("../controllers/gastoController");
 
-// Define routes
-router.get("/", gastoController.getAllGastos); // Get all expenses
-router.get("/:id", gastoController.getGastoById); // Get expense by ID
-router.post("/", gastoController.createGasto); // Create a new expense
-router.put("/:id", gastoController.updateGasto); // Update an existing expense
-router.delete("/:id", gastoController.deleteGasto); // Delete an expense
+// Rutas de gastos:
+router.get("/", gastoController.getAllGastos); 
+router.get("/:id", gastoController.getGastoById); 
+router.post("/", gastoController.createGasto); 
+router.put("/:id", gastoController.updateGasto); 
+router.delete("/:id", gastoController.deleteGasto); 
 
+// Exportar rutas:
 module.exports = router;
