@@ -7,8 +7,8 @@ const presupuestoRoutes = require("./routes/presupuestoRoutes");
 const categoriaRoutes = require("./routes/categoriaRoutes");
 const gastoRoutes = require("./routes/gastoRoutes");
 
-/* Puede crear conflicto
- */ const session = require("express-session");
+// Puede crear conflicto:
+const session = require("express-session");
 
 const app = express();
 require("dotenv").config();
@@ -16,12 +16,12 @@ require("dotenv").config();
 // Configuración de sesiones
 app.use(
   session({
-    secret: "tu_secreto_super_seguro", // Cambia esto por una clave segura
+    secret: "tu_secreto_super_seguro",
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // Cambia a true si usas HTTPS
-      maxAge: 24 * 60 * 60 * 1000, // 24 horas
+      secure: false,
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
@@ -37,17 +37,6 @@ app.use("/api/presupuestos", presupuestoRoutes);
 app.use("/api/categorias", categoriaRoutes);
 app.use("/api/gastos", gastoRoutes);
 
-// Rutas de autenticación
-/* app.post("/api/login", authController.login);
-app.post("/api/register", authController.register);
-app.get(
-  "/api/user",
-  authController.authenticateUser,
-  authController.getCurrentUser
-);
-app.post("/api/logout", authController.logout); */
-
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
