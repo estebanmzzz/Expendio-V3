@@ -3,84 +3,281 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard de Gastos</title>
+    <title>EXPENDIO - Control de Finanzas Personales</title>
+    <link rel="stylesheet" href="./view/CSS/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&"
     />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-      }
-
-      body {
-        background-color: #f5f5f5;
-        min-height: 100vh;
-      }
-
-      header {
-        background-color: white;
-        padding: 0.1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .logo {
-        font-weight: 600;
-        font-size: 1.5rem;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-      }
-
-      .nav-links div {
-        cursor: pointer;
-        padding: 0.5rem 0.75rem;
-      }
-
-      .logIn-btn a {
-        color: #2563eb;
-        cursor: pointer;
-        text-decoration: none;
-      }
-
-      .signUp-btn a {
-        background: linear-gradient(to right, #3b82f6, #2563eb);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        text-decoration: none;
-      }
-    </style>
   </head>
   <body>
     <header>
-      <div class="logo">LOGO</div>
-      <div class="nav-links">
-        <div>Home</div>
-        <div>About</div>
-        <div>Donar</div>
-      </div>
-      <div class="nav-links">
-        <div class="logIn-btn"><a href="./view/Login.html">Log In</a></div>
-        <div class="signUp-btn">
-          <a href="./view/Register.html">Sign Up</a>
+      <div class="container header-container">
+        <div class="logo">EXPENDIO</div>
+        <div class="nav-links">
+          <div class="nav-item">Home</div>
+          <div class="nav-item">Features</div>
+          <div class="nav-item">Pricing</div>
+          <div class="nav-item">About</div>
         </div>
-        <div class="user-avatar">
-          <span class="material-symbols-outlined"> account_circle </span>
+        <div class="auth-links">
+          <div class="login-btn"><a href="./view/Login.html">Log In</a></div>
+          <div class="signup-btn">
+            <a href="./view/Register.html">Sign Up</a>
+          </div>
+          <div class="user-avatar">
+            <span class="material-symbols-outlined">account_circle</span>
+          </div>
+          <div class="menu-icon">
+            <span class="material-symbols-outlined">menu</span>
+          </div>
         </div>
       </div>
-      <main></main>
     </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <div class="hero-tagline">Finanzas personales simplificadas</div>
+              <h1 class="hero-title">Toma el control de tus finanzas</h1>
+              <p class="hero-subtitle">
+                EXPENDIO te ayuda a gestionar tus gastos, crear presupuestos
+                inteligentes y alcanzar tus metas financieras sin
+                complicaciones.
+              </p>
+              <div class="hero-buttons">
+                <a href="./view/Register.html" class="hero-btn-primary">
+                  <span>Empezar ahora</span>
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+                <a href="#" class="hero-btn-secondary">
+                  <span>Conoce más</span>
+                  <span class="material-symbols-outlined">info</span>
+                </a>
+              </div>
+              <div class="hero-stats">
+                <div class="stat-item">
+                  <div class="stat-value">+5K</div>
+                  <div class="stat-label">Usuarios activos</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">98%</div>
+                  <div class="stat-label">Satisfacción</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">+500K</div>
+                  <div class="stat-label">Gastos registrados</div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-image">
+              <div class="hero-image-container">
+                <img
+                  src="/api/placeholder/400/320"
+                  alt="Dashboard de EXPENDIO"
+                />
+              </div>
+              <div class="floating-card card-1">
+                <div class="card-title">Progreso de ahorro</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="card-data">
+                  <div>$7,500 / $10,000</div>
+                  <div>75%</div>
+                </div>
+              </div>
+              <div class="floating-card card-2">
+                <div class="card-title">Gasto mensual</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="card-data">
+                  <div>$1,300 / $2,000</div>
+                  <div>65%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bento Grid Section -->
+      <section class="bento-section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Gestiona tus finanzas con facilidad</h2>
+            <p class="section-subtitle">
+              Herramientas poderosas y simples para ayudarte a gastar de manera
+              inteligente, ahorrar más y lograr tus metas financieras.
+            </p>
+          </div>
+
+          <div class="bento-grid">
+            <div class="bento-item">
+              <div class="bento-icon icon-blue">
+                <span class="material-symbols-outlined">monitoring</span>
+              </div>
+              <h3 class="bento-title">Dashboards personalizados</h3>
+              <p class="bento-text">
+                Visualiza tus finanzas con gráficos interactivos y obtén
+                información clara sobre tus patrones de gasto.
+              </p>
+              <a href="#" class="bento-link">
+                <span>Explorar</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+
+            <div class="bento-item span-2">
+              <div class="bento-icon icon-purple">
+                <span class="material-symbols-outlined">savings</span>
+              </div>
+              <h3 class="bento-title">Presupuestos inteligentes</h3>
+              <p class="bento-text">
+                Crea presupuestos personalizados que se adapten a tu estilo de
+                vida y recibe alertas cuando te acerques a tus límites.
+              </p>
+              <div class="bento-stats">
+                <div class="bento-stat">
+                  <div class="bento-stat-value">35%</div>
+                  <div class="bento-stat-label">Aumento en ahorro</div>
+                </div>
+                <div class="bento-stat">
+                  <div class="bento-stat-value">42%</div>
+                  <div class="bento-stat-label">Reducción de gastos</div>
+                </div>
+                <div class="bento-stat">
+                  <div class="bento-stat-value">89%</div>
+                  <div class="bento-stat-label">Metas alcanzadas</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bento-item span-row-2">
+              <div class="bento-icon icon-green">
+                <span class="material-symbols-outlined">category</span>
+              </div>
+              <h3 class="bento-title">Categorización automática</h3>
+              <p class="bento-text">
+                Clasifica automáticamente tus gastos en categorías
+                personalizables para identificar dónde va tu dinero.
+              </p>
+              <a href="#" class="bento-link">
+                <span>Descubrir</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+              <div class="bento-image">
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 120px; opacity: 0.5"
+                  >category</span
+                >
+              </div>
+            </div>
+
+            <div class="bento-item">
+              <div class="bento-icon icon-orange">
+                <span class="material-symbols-outlined">trending_up</span>
+              </div>
+              <h3 class="bento-title">Análisis de tendencias</h3>
+              <p class="bento-text">
+                Obtén insights sobre tus hábitos de gasto y tendencias a lo
+                largo del tiempo para tomar mejores decisiones.
+              </p>
+              <a href="#" class="bento-link">
+                <span>Ver más</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+
+            <div class="bento-item">
+              <div class="bento-icon icon-blue">
+                <span class="material-symbols-outlined">notifications</span>
+              </div>
+              <h3 class="bento-title">Alertas personalizadas</h3>
+              <p class="bento-text">
+                Configura notificaciones para gastos inusuales, recordatorios de
+                facturas y logros de metas financieras.
+              </p>
+              <a href="#" class="bento-link">
+                <span>Configurar</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">EXPENDIO</div>
+            <p class="footer-description">
+              Simplificando las finanzas personales para que puedas enfocarte en
+              lo que realmente importa.
+            </p>
+            <div class="footer-social">
+              <a href="#" class="social-icon">
+                <span class="material-symbols-outlined">share</span>
+              </a>
+              <a href="#" class="social-icon">
+                <span class="material-symbols-outlined">mail</span>
+              </a>
+              <a href="#" class="social-icon">
+                <span class="material-symbols-outlined">forum</span>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="footer-title">Producto</h4>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Características</a></li>
+              <li class="footer-link"><a href="#">Precios</a></li>
+              <li class="footer-link"><a href="#">Testimonios</a></li>
+              <li class="footer-link"><a href="#">Guías</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-title">Compañía</h4>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Acerca de</a></li>
+              <li class="footer-link"><a href="#">Blog</a></li>
+              <li class="footer-link"><a href="#">Careers</a></li>
+              <li class="footer-link"><a href="#">Contacto</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-title">Legal</h4>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Términos de servicio</a></li>
+              <li class="footer-link">
+                <a href="#">Política de privacidad</a>
+              </li>
+              <li class="footer-link"><a href="#">Cookies</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          © 2025 EXPENDIO. Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
   </body>
   <script>
     document
@@ -94,5 +291,7 @@
           window.location.href = "./view/Login.html";
         }
       });
+
+    // Mobile menu functionality could be added here
   </script>
 </html>

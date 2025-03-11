@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link rel="stylesheet" href="./CSS/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">LOGO</div>
+      <div class="nav-links">
+        <div onclick="location.href='./Dashboard.html'" style="cursor: pointer">
+          Mi Dashboard
+        </div>
+        <div
+          onclick="location.href='./Presupuestos.html'"
+          style="cursor: pointer"
+        >
+          Mis Presupuestos
+        </div>
+        <div onclick="location.href='./Gastos.html'" style="cursor: pointer">
+          Mis Gastos
+        </div>
+        <div
+          onclick="location.href='./Categorias.html'"
+          style="cursor: pointer"
+        >
+          Mis Categorías
+        </div>
+      </div>
+      <div class="nav-links">
+        <div class="user-avatar">
+          <span class="material-symbols-outlined"> account_circle </span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="components-container">
+        <div class="user-profile">
+          <h2>Mi Perfil</h2>
+          <h3>Datos Personales</h3>
+          <div class="user-info">
+            <label
+              >Nombre: <span id="nombre" class="user-data">Ejemplo</span></label
+            >
+            <label
+              >Apellido:
+              <span id="apellido" class="user-data">Ejemplo</span></label
+            >
+            <label
+              >Email:
+              <span id="email" class="user-data">name@example.com</span></label
+            >
+            <label
+              >Nickname:
+              <span id="nickname" class="user-data">Afroken</span></label
+            >
+            <label>Contraseña: <button>Editar Contraseña</button></label>
+          </div>
+          <div class="btn-container">
+            <button class="btn edit-btn">Editar Datos</button>
+            <button class="btn delete-account-btn">Eliminar Cuenta</button>
+            <button class="btn logout-btn">Cerrar Sesión</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      try {
+        function getUserData() {
+          const data = sessionStorage.getItem("user");
+          if (!data) throw new Error("No user data found in session storage");
+          return JSON.parse(data);
+        }
+
+        const user = getUserData();
+
+        document.getElementById("nombre").innerHTML = user.nombre;
+        document.getElementById("apellido").innerHTML = user.apellido;
+        document.getElementById("email").innerHTML = user.email;
+        document.getElementById("nickname").innerHTML = user.nickname;
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      }
+
+      function logout() {
+        sessionStorage.clear();
+        window.location.href = "../index.html";
+      }
+
+      const logoutBtn = document.querySelector(".logout-btn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+    });
+  </script>
+</html>
