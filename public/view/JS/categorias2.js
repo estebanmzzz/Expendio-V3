@@ -11,6 +11,12 @@ if (userAvatar) {
   console.error("Elemento .user-avatar no encontrado.");
 }
 
+const addCategoryButton = document.getElementById("addCategoryButton");
+
+if (addCategoryButton) {
+  addCategoryButton.addEventListener("click", () => addCategoria());
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM completamente cargado");
 
