@@ -30,14 +30,22 @@ body {
   line-height: 1.5;
 }
 
-/* Header Styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
 header {
   background-color: var(--bg-white);
-  padding: 1rem 2rem;
+  padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow-sm);
+}
+
+.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,7 +54,11 @@ header {
 .logo {
   font-weight: 800;
   font-size: 1.5rem;
-  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  background: linear-gradient(
+    to right,
+    var(--primary),
+    var(--primary-dark)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -59,16 +71,23 @@ header {
   align-items: center;
 }
 
-.nav-links div {
+.nav-item {
   font-weight: 500;
   cursor: pointer;
   padding: 0.5rem 0.75rem;
   transition: color 0.2s ease;
   color: var(--text-light);
+  text-decoration: none;
 }
 
-.nav-links div:hover {
+.nav-item:hover {
   color: var(--primary);
+}
+
+.auth-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
 }
 
 .user-avatar {
@@ -89,14 +108,9 @@ header {
   color: var(--primary-dark);
 }
 
-.user-avatar svg {
-  width: 30px;
-  height: 30px;
-}
-
 /* Main Content */
 main {
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .components-container {
@@ -121,19 +135,19 @@ main {
 .add-expense-container {
   background-color: var(--bg-white);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: var(--shadow-md);
 }
 
 .add-expense-container h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-dark);
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -205,13 +219,13 @@ main {
 .expenses-list {
   display: flex;
   flex-direction: column;
-  gap: .75rem;
+  gap: .5rem;
 }
 
 .expense-item {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1rem;
+  gap: .5rem;
   padding: .5rem;
   border-radius: var(--radius-md);
   background-color: var(--bg-light);
@@ -219,8 +233,9 @@ main {
 }
 
 .expense-item:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
+  background-color: #e2e8f0;
 }
 
 .expense-info {
