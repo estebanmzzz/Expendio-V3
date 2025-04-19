@@ -70,92 +70,12 @@ exports.createUsuario = async (req, res) => {
   }
 };
 
-/* exports.updateUsuario = async (req, res) => {
-  const { id } = req.params;
-  const { nombre, apellido, nickname, email } = req.body;
-
-  if (!nombre && !apellido && !nickname && !email) {
-    return res.status(400).json({ error: "No hay datos para actualizar" });
-  }
-
-  const updates = [];
-  const values = [];
-
-  if (nombre) {
-    updates.push("nombre = ?");
-    values.push(nombre);
-  }
-  if (apellido) {
-    updates.push("apellido = ?");
-    values.push(apellido);
-  }
-  if (nickname !== undefined) {
-    updates.push("nickname = ?");
-    values.push(nickname || null);
-  }
-  if (email) {
-    const [existingUser] = await pool.query(
-      "SELECT * FROM usuarios WHERE email = ? AND usuario_id != ?",
-      [email, id]
-    );
-
-    if (existingUser.length > 0) {
-      return res.status(400).json({ error: "El email ya está en uso" });
-    }
-
-    updates.push("email = ?");
-    values.push(email);
-  }
-
-  values.push(id);
-
-  try {
-    const [result] = await pool.query(
-      `UPDATE usuarios SET ${updates.join(", ")} WHERE usuario_id = ?`,
-      values
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
-    }
-
-    res.status(200).json({ message: "Usuario actualizado exitosamente" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al actualizar usuario" });
-  }
-}; */
-
-/* exports.deleteUsuario = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    await pool.query("DELETE FROM auth WHERE usuario_id = ?", [id]);
-
-    const [result] = await pool.query(
-      "DELETE FROM usuarios WHERE usuario_id = ?",
-      [id]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
-    }
-
-    res.status(200).json({ message: "Usuario eliminado exitosamente" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al eliminar usuario" });
-  }
-}; */
-
-// Modified updateUsuario to improve error handling and logging
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
 
   console.log(`updateUsuario called with id: ${id}`);
   console.log("Request body:", req.body);
 
-  // Check if ID is valid
   if (!id || id === "undefined") {
     console.error("Invalid user ID provided:", id);
     return res.status(400).json({ error: "ID de usuario inválido" });
@@ -179,7 +99,7 @@ exports.updateUsuario = async (req, res) => {
     updates.push("apellido = ?");
     values.push(apellido);
   }
-  // Modified to handle empty strings properly
+
   if (nickname !== undefined) {
     updates.push("nickname = ?");
     values.push(nickname || null);
@@ -230,13 +150,11 @@ exports.updateUsuario = async (req, res) => {
   }
 };
 
-// Modified deleteUsuario to improve error handling and logging
 exports.deleteUsuario = async (req, res) => {
   const { id } = req.params;
 
   console.log(`deleteUsuario called with id: ${id}`);
 
-  // Check if ID is valid
   if (!id || id === "undefined") {
     console.error("Invalid user ID provided:", id);
     return res.status(400).json({ error: "ID de usuario inválido" });

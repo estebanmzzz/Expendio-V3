@@ -16,7 +16,7 @@ require("dotenv").config();
 // Configuración de sesiones
 app.use(
   session({
-    secret: "tu_secreto_super_seguro",
+    secret: "secret",
     resave: false,
     saveUninitialized: true,
     cookie: {

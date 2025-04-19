@@ -115,7 +115,6 @@ exports.updateGasto = async (req, res) => {
   }
 };
 
-// Delete an expense
 exports.deleteGasto = async (req, res) => {
   const { id } = req.params;
 

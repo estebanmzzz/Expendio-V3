@@ -155,9 +155,9 @@ exports.updateCategoria = async (req, res) => {
 
 exports.deleteCategoria = async (req, res) => {
   const { id } = req.params;
-  const usuario_id = req.body.usuario_id || req.user?.id; // Asumiendo que tienes middleware de autenticación
+  const usuario_id = req.body.usuario_id || req.user?.id; 
 
-  // Primero verificar que la categoría pertenece al usuario
+  // Verifica que la categoría pertenece al usuario
   try {
     const [categoryRows] = await pool.query(
       "SELECT * FROM categorias WHERE categoria_id = ?",
@@ -168,14 +168,13 @@ exports.deleteCategoria = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // Si la categoría tiene usuario_id = 0 (default), no permitir eliminación
+    // Si la categoría es default, no se puede eliminar
     if (categoryRows[0].usuario_id === 0) {
       return res
         .status(403)
         .json({ error: "Default categories cannot be deleted" });
     }
 
-    // Si el usuario_id no coincide con el de la categoría, no permitir eliminación
     if (usuario_id && categoryRows[0].usuario_id !== usuario_id) {
       return res
         .status(403)
