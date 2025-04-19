@@ -14,16 +14,10 @@
       <div class="header-container container">
         <div class="logo">EXPENDIO</div>
         <div class="nav-links">
-          <a href="/public/view/Dashboard.html" class="nav-item"
-            >Mi Dashboard</a
-          >
-          <a href="/public/view/Presupuestos.html" class="nav-item"
-            >Mis Presupuestos</a
-          >
-          <a href="/public/view/Gastos.html" class="nav-item">Mis Gastos</a>
-          <a href="/public/view/Categorias.html" class="nav-item"
-            >Mis Categorías</a
-          >
+          <a href="/dashboard" class="nav-item">Mi Dashboard</a>
+          <a href="/presupuestos" class="nav-item">Mis Presupuestos</a>
+          <a href="/gastos" class="nav-item">Mis Gastos</a>
+          <a href="/categorias" class="nav-item">Mis Categorías</a>
         </div>
         <div class="auth-links">
           <div class="user-avatar">
@@ -78,7 +72,7 @@
       </div>
     </section>
 
-    <script src="./JS/categorias2.js"></script>
+    <script src="/view/JS/categorias2.js"></script>
   </body>
   <style>
     :root {
@@ -381,6 +375,18 @@
 
     .category-add-btn:hover {
       background-color: #f1f5f9;
+    }
+
+    .subcategories-container {
+      display: none; /* Inicialmente oculto */
+    }
+
+    .category-card.active .subcategories-container {
+      display: flex; /* Mostrar cuando la categoría está activa */
+    }
+
+    .category-card-header {
+      cursor: pointer;
     }
 
     /* Responsive Styles */

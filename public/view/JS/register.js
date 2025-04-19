@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         alert("Usuario registrado exitosamente");
         //form.reset();
-        window.location.href = "/public/view/Login.html";
+        window.location.href = "/login";
       } else {
         alert("Error: " + result.error);
       }

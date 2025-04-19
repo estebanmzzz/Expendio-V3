@@ -27,9 +27,9 @@
           <div class="nav-item">About</div>
         </div>
         <div class="auth-links">
-          <div class="login-btn"><a href="./view/Login.html">Log In</a></div>
+          <div class="login-btn"><a href="/login">Log In</a></div>
           <div class="signup-btn">
-            <a href="./view/Register.html">Sign Up</a>
+            <a href="/register">Sign Up</a>
           </div>
           <div class="user-avatar">
             <span class="material-symbols-outlined">account_circle</span>
@@ -55,7 +55,7 @@
                 complicaciones.
               </p>
               <div class="hero-buttons">
-                <a href="./view/Register.html" class="hero-btn-primary">
+                <a href="/register" class="hero-btn-primary">
                   <span>Empezar ahora</span>
                   <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
@@ -286,9 +286,9 @@
         const user = sessionStorage.getItem("user");
 
         if (user) {
-          window.location.href = "./view/Profile.html";
+          window.location.href = "/profile";
         } else {
-          window.location.href = "./view/Login.html";
+          window.location.href = "/login";
         }
       });
 

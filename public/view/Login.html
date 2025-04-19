@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="./CSS/login.css" />
+    <link rel="stylesheet" href="/view/CSS/login.css" />
   </head>
   <body>
     <div class="login-card">
@@ -38,7 +38,7 @@
 
         <div class="links">
           <a class="link">Olvidaste tu contraseña?</a>
-          <a href="Register.html" class="link">Crear una cuenta</a>
+          <a href="/register" class="link">Crear una cuenta</a>
         </div>
       </form>
     </div>
@@ -76,7 +76,7 @@
 
             alert("Login exitoso");
 
-            window.location.href = "./Dashboard.html";
+            window.location.href = "/dashboard";
           } else {
             alert("Error: " + result.error);
           }

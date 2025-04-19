@@ -5,7 +5,7 @@ const userAvatar = document.querySelector(".user-avatar");
 
 if (userAvatar) {
   userAvatar.addEventListener("click", function () {
-    window.location.href = "./profile.html";
+    window.location.href = "/profile";
   });
 } else {
   console.error("Elemento .user-avatar no encontrado.");
@@ -312,7 +312,8 @@ function addSubcategoria(categoriaId) {
     console.log("Creación de subcategoría cancelada o nombre vacío");
   }
 }
-function crearCategoriaHeader(categoria) {
+
+/* function crearCategoriaHeader(categoria) {
   const header = document.createElement("div");
   header.className = "category-card-header";
 
@@ -349,7 +350,7 @@ function crearCategoriaHeader(categoria) {
   }
 
   return header;
-}
+} */
 
 function crearBoton(nombreIcono, clase, onClick) {
   const boton = document.createElement("button");
@@ -413,7 +414,7 @@ function procesarDatosAPI(data) {
   );
 }
 
-function renderizarCategorias() {
+/* function renderizarCategorias() {
   console.log("Renderizando categorías...");
   const contenedor = document.getElementById("categoriasContainer");
 
@@ -507,6 +508,167 @@ function renderizarCategorias() {
 
     addContainer.appendChild(addBtn);
     categoriaCard.appendChild(addContainer);
+
+    contenedor.appendChild(categoriaCard);
+  });
+
+  console.log("Renderización de categorías completada");
+} */
+
+function crearCategoriaHeader(categoria) {
+  const header = document.createElement("div");
+  header.className = "category-card-header";
+
+  // Añadir evento de clic para expandir/colapsar
+  header.addEventListener("click", function (event) {
+    // Ignorar clics en los botones
+    if (event.target.closest(".category-btn")) {
+      return;
+    }
+
+    // Cerrar todas las demás categorías
+    document.querySelectorAll(".category-card.active").forEach((card) => {
+      if (card !== header.parentElement) {
+        card.classList.remove("active");
+      }
+    });
+
+    // Alternar la clase active en esta categoría
+    header.parentElement.classList.toggle("active");
+  });
+
+  const titulo = document.createElement("h3");
+  titulo.className = "category-title";
+  titulo.textContent = categoria.nombre;
+
+  if (categoria.usuario_id === 0) {
+    titulo.classList.add("categoria-default");
+    const defaultBadge = document.createElement("span");
+    defaultBadge.className = "default-badge";
+    defaultBadge.textContent = "";
+    titulo.appendChild(defaultBadge);
+  }
+
+  header.appendChild(titulo);
+
+  // Agregar botones de editar/eliminar para categorías que no son por defecto
+  if (categoria.usuario_id !== 0) {
+    const actionsContainer = document.createElement("div");
+    actionsContainer.className = "category-actions"; // Usar la misma clase que para subcategorías
+
+    const editBtn = crearBoton("edit", "category-btn edit-btn", () =>
+      editarCategoria(categoria.id)
+    );
+
+    const deleteBtn = crearBoton("delete", "category-btn delete-btn", () =>
+      eliminarCategoria(categoria.id)
+    );
+
+    actionsContainer.appendChild(editBtn);
+    actionsContainer.appendChild(deleteBtn);
+    header.appendChild(actionsContainer);
+  }
+
+  return header;
+}
+
+function renderizarCategorias() {
+  console.log("Renderizando categorías...");
+  const contenedor = document.getElementById("categoriasContainer");
+
+  if (!contenedor) {
+    console.error("No se encontró el contenedor de categorías.");
+    return;
+  }
+
+  console.log("Contenedor encontrado, limpiando contenido anterior");
+  contenedor.innerHTML = "";
+
+  if (categorias.length === 0) {
+    console.log("No hay categorías para mostrar");
+    const mensaje = document.createElement("div");
+    mensaje.className = "no-categorias";
+    mensaje.textContent = "No hay categorías disponibles.";
+    contenedor.appendChild(mensaje);
+    return;
+  }
+
+  console.log(`Renderizando ${categorias.length} categorías`);
+
+  categorias.forEach((categoria) => {
+    console.log(
+      `Renderizando categoría: ${categoria.nombre} con ${categoria.subcategorias.length} subcategorías`
+    );
+
+    const categoriaCard = document.createElement("div");
+    categoriaCard.className = "category-card";
+
+    // Crear header
+    const header = crearCategoriaHeader(categoria);
+    categoriaCard.appendChild(header);
+
+    // Crear contenedor de subcategorías
+    const subcontainer = document.createElement("div");
+    subcontainer.className = "subcategories-container";
+    categoriaCard.appendChild(subcontainer);
+
+    if (categoria.subcategorias && categoria.subcategorias.length > 0) {
+      console.log(
+        `Renderizando ${categoria.subcategorias.length} subcategorías para ${categoria.nombre}`
+      );
+
+      categoria.subcategorias.forEach((subcategoria) => {
+        const subItem = document.createElement("div");
+        subItem.className = "subcategory";
+
+        // Crear nombre de subcategoría
+        const nombre = document.createElement("span");
+        nombre.className = "subcategory-name";
+        nombre.textContent = subcategoria.nombre;
+        subItem.appendChild(nombre);
+
+        if (subcategoria.usuario_id !== 0) {
+          const actionsContainer = document.createElement("div");
+          actionsContainer.className = "subcategory-actions";
+
+          const editBtn = crearBoton("edit", "subcategory-btn edit-btn", () =>
+            editarCategoria(subcategoria.id)
+          );
+
+          const deleteBtn = crearBoton(
+            "delete",
+            "subcategory-btn delete-btn",
+            () => eliminarCategoria(subcategoria.id)
+          );
+
+          actionsContainer.appendChild(editBtn);
+          actionsContainer.appendChild(deleteBtn);
+          subItem.appendChild(actionsContainer);
+        }
+
+        subcontainer.appendChild(subItem);
+      });
+    }
+
+    // Solo añadir el botón de añadir subcategoría si la categoría no es por defecto
+    if (categoria.usuario_id !== 0) {
+      const addContainer = document.createElement("div");
+      addContainer.className = "category-add-container";
+
+      const addBtn = document.createElement("button");
+      addBtn.className = "category-add-btn";
+      addBtn.addEventListener("click", () => addSubcategoria(categoria.id));
+
+      const addIcon = document.createElement("span");
+      addIcon.className = "material-symbols-outlined";
+      addIcon.textContent = "add";
+
+      addBtn.appendChild(addIcon);
+      addBtn.appendChild(document.createTextNode(" add"));
+
+      addContainer.appendChild(addBtn);
+      categoriaCard.appendChild(addContainer);
+    }
 
     contenedor.appendChild(categoriaCard);
   });

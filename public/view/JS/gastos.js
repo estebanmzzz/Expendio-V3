@@ -8,7 +8,7 @@ const userAvatar = document.querySelector(".user-avatar");
 
 if (userAvatar) {
   userAvatar.addEventListener("click", function () {
-    window.location.href = "./profile.html";
+    window.location.href = "/profile";
   });
 } else {
   console.error("Elemento .user-avatar no encontrado.");

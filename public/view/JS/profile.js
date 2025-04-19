@@ -70,13 +70,13 @@ document.addEventListener("DOMContentLoaded", function () {
       console.warn(
         "No user data found in sessionStorage, redirecting to login..."
       );
-      window.location.href = "../index.html";
+      window.location.href = "/";
       return;
     }
   } catch (error) {
     console.error("❌ Error retrieving or processing user data:", error);
     console.error("Error stack:", error.stack);
-    window.location.href = "../index.html";
+    window.location.href = "/";
     return;
   }
 
@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Redirigir después de un breve retraso
         console.log("Redirecting to login page in 2 seconds...");
         setTimeout(() => {
-          window.location.href = "../index.html";
+          window.location.href = "/";
         }, 2000);
       } catch (error) {
         console.error("❌ Error deleting account:", error);
@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Clearing session storage");
     sessionStorage.clear();
     console.log("Redirecting to login page");
-    window.location.href = "../index.html";
+    window.location.href = "/";
   });
 
   // Toast notification function

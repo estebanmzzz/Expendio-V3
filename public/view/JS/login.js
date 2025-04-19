@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         alert("Login exitoso");
 
-        window.location.href = "./Dashboard.html";
+        window.location.href = "/dashboard";
       } else {
         alert("Error: " + result.error);
       }

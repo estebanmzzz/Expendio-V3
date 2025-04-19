@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (userAvatar) {
     userAvatar.addEventListener("click", function () {
-      window.location.href = "./profile.html";
+      window.location.href = "/profile";
     });
   } else {
     console.error("Elemento .user-avatar no encontrado.");
