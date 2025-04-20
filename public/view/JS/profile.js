@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     apellido: document.getElementById("apellido"),
     email: document.getElementById("email"),
     nickname: document.getElementById("nickname"),
+    password: document.getElementById("password"),
   };
 
   // Check if any elements are missing
@@ -130,24 +131,31 @@ document.addEventListener("DOMContentLoaded", function () {
       // Update modal
       document.getElementById("edit-field-label").textContent =
         getFieldLabel(currentField);
-      document.getElementById("edit-field-input").value = currentValue;
+
+      const standardField = document.querySelector(".standard-field");
+      const passwordFields = document.querySelector(".password-fields");
+
+      if (currentField === "password") {
+        // Show password fields, hide standard field
+        standardField.style.display = "none";
+        passwordFields.style.display = "block";
+
+        // Clear password fields
+        document.getElementById("current-password-input").value = "";
+        document.getElementById("new-password-input").value = "";
+        document.getElementById("confirm-password-input").value = "";
+      } else {
+        // Show standard field, hide password fields
+        standardField.style.display = "block";
+        passwordFields.style.display = "none";
+        document.getElementById("edit-field-input").value = currentValue;
+      }
 
       // Show modal
       console.log("Opening edit modal");
       editModal.classList.add("active");
     });
   });
-
-  // Get label based on field name
-  function getFieldLabel(field) {
-    const labels = {
-      nombre: "Nombre",
-      apellido: "Apellido",
-      email: "Email",
-      nickname: "Nickname",
-    };
-    return labels[field] || "Campo";
-  }
 
   // Close edit modal
   document.getElementById("close-modal").addEventListener("click", function () {
@@ -160,99 +168,166 @@ document.addEventListener("DOMContentLoaded", function () {
     editModal.classList.remove("active");
   });
 
-  // Save edit - Updated to use updateUsuario controller
+  // Save edit - Updated to handle password change
   document
     .getElementById("save-edit")
     .addEventListener("click", async function () {
       console.log("Save edit button clicked");
-      const newValue = document.getElementById("edit-field-input").value;
-      console.log(`Attempting to update ${currentField} to: ${newValue}`);
 
-      // Verificar que tenemos un ID de usuario válido
-      if (!userId) {
-        console.error("❌ Cannot update: userId is undefined or null");
-        showToast("Error: No se pudo encontrar el ID de usuario");
-        return;
-      }
-
-      // Crear objeto con el campo a actualizar
-      const updateData = {};
-      updateData[currentField] = newValue;
-      console.log("Update payload:", JSON.stringify(updateData));
-      console.log(`API endpoint: http://localhost:3000/api/usuarios/${userId}`);
-
-      try {
-        console.log("Sending PUT request...");
-        // Llamar a la API para actualizar el usuario
-        const response = await fetch(
-          `http://localhost:3000/api/usuarios/${userId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updateData),
-          }
-        );
-
-        console.log("Response status:", response.status);
-        console.log(
-          "Response headers:",
-          [...response.headers].map((h) => `${h[0]}: ${h[1]}`).join(", ")
-        );
-
-        // Try to get response text first to debug any JSON parse errors
-        const responseText = await response.text();
-        console.log("Raw response:", responseText);
-
-        let data;
-        try {
-          // Convert text back to JSON if possible
-          data = responseText ? JSON.parse(responseText) : {};
-          console.log("Parsed response data:", data);
-        } catch (jsonError) {
-          console.error("❌ Failed to parse response JSON:", jsonError);
-          console.log("Invalid JSON response:", responseText);
-          throw new Error("Error al procesar la respuesta del servidor");
-        }
-
-        if (!response.ok) {
-          console.error(`❌ Server returned error: ${response.status}`);
-          throw new Error(
-            data.error || `Error ${response.status}: ${response.statusText}`
-          );
-        }
-
-        // Actualizar el valor mostrado
-        console.log(`Updating displayed ${currentField} to: ${newValue}`);
-        document.getElementById(currentField).textContent = newValue;
-
-        // Actualizar datos de usuario en sessionStorage
-        userData[currentField] = newValue;
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        console.log("Updated sessionStorage with new data");
-
-        // Actualizar saludo del perfil si se cambió el nickname
-        if (currentField === "nickname") {
-          console.log("Updating profile greeting for new nickname");
-          document.getElementById(
-            "profile-greeting"
-          ).textContent = `Hola, ${newValue}`;
-        }
-
-        // Cerrar modal
-        console.log("Closing edit modal after successful update");
-        editModal.classList.remove("active");
-
-        // Mostrar notificación de éxito
-        showToast("Cambios guardados exitosamente");
-        console.log("✅ Update completed successfully");
-      } catch (error) {
-        console.error("❌ Error updating user:", error);
-        console.error("Error stack:", error.stack);
-        showToast(error.message || "Error al guardar los cambios");
+      if (currentField === "password") {
+        savePasswordChange();
+      } else {
+        saveNormalField();
       }
     });
+
+  async function saveNormalField() {
+    const newValue = document.getElementById("edit-field-input").value;
+    console.log(`Attempting to update ${currentField} to: ${newValue}`);
+
+    // Verificar que tenemos un ID de usuario válido
+    if (!userId) {
+      console.error("❌ Cannot update: userId is undefined or null");
+      showToast("Error: No se pudo encontrar el ID de usuario");
+      return;
+    }
+
+    // Crear objeto con el campo a actualizar
+    const updateData = {};
+    updateData[currentField] = newValue;
+    console.log("Update payload:", JSON.stringify(updateData));
+    console.log(`API endpoint: http://localhost:3000/api/usuarios/${userId}`);
+
+    try {
+      console.log("Sending PUT request...");
+      // Llamar a la API para actualizar el usuario
+      const response = await fetch(
+        `http://localhost:3000/api/usuarios/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      console.log("Response status:", response.status);
+      console.log(
+        "Response headers:",
+        [...response.headers].map((h) => `${h[0]}: ${h[1]}`).join(", ")
+      );
+
+      // Try to get response text first to debug any JSON parse errors
+      const responseText = await response.text();
+      console.log("Raw response:", responseText);
+
+      let data;
+      try {
+        // Convert text back to JSON if possible
+        data = responseText ? JSON.parse(responseText) : {};
+        console.log("Parsed response data:", data);
+      } catch (jsonError) {
+        console.error("❌ Failed to parse response JSON:", jsonError);
+        console.log("Invalid JSON response:", responseText);
+        throw new Error("Error al procesar la respuesta del servidor");
+      }
+
+      if (!response.ok) {
+        console.error(`❌ Server returned error: ${response.status}`);
+        throw new Error(
+          data.error || `Error ${response.status}: ${response.statusText}`
+        );
+      }
+
+      // Actualizar el valor mostrado
+      console.log(`Updating displayed ${currentField} to: ${newValue}`);
+      document.getElementById(currentField).textContent = newValue;
+
+      // Actualizar datos de usuario en sessionStorage
+      userData[currentField] = newValue;
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      console.log("Updated sessionStorage with new data");
+
+      // Actualizar saludo del perfil si se cambió el nickname
+      if (currentField === "nickname") {
+        console.log("Updating profile greeting for new nickname");
+        document.getElementById(
+          "profile-greeting"
+        ).textContent = `Hola, ${newValue}`;
+      }
+
+      // Cerrar modal
+      console.log("Closing edit modal after successful update");
+      editModal.classList.remove("active");
+
+      // Mostrar notificación de éxito
+      showToast("Cambios guardados exitosamente");
+      console.log("✅ Update completed successfully");
+    } catch (error) {
+      console.error("❌ Error updating user:", error);
+      console.error("Error stack:", error.stack);
+      showToast(error.message || "Error al guardar los cambios");
+    }
+  }
+
+  async function savePasswordChange() {
+    const currentPassword = document.getElementById(
+      "current-password-input"
+    ).value;
+    const newPassword = document.getElementById("new-password-input").value;
+    const confirmPassword = document.getElementById(
+      "confirm-password-input"
+    ).value;
+
+    // Validaciones
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      showToast("Por favor, completa todos los campos", "error");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      showToast("La contraseña debe tener al menos 8 caracteres", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showToast("Las contraseñas no coinciden", "error");
+      return;
+    }
+
+    try {
+      console.log("Enviando solicitud para cambiar contraseña...");
+
+      const response = await fetch(
+        `http://localhost:3000/api/auth/change-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Error al cambiar la contraseña");
+      }
+
+      // Cerrar modal
+      editModal.classList.remove("active");
+
+      // Mostrar notificación de éxito
+      showToast("Contraseña actualizada correctamente");
+    } catch (error) {
+      console.error("Error al cambiar contraseña:", error);
+      showToast(error.message || "Error al cambiar la contraseña", "error");
+    }
+  }
 
   // Delete account functionality - Updated to use deleteUsuario controller
   document
@@ -355,10 +430,31 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "/";
   });
 
+  // Get label based on field name
+  function getFieldLabel(field) {
+    const labels = {
+      nombre: "Nombre",
+      apellido: "Apellido",
+      email: "Email",
+      nickname: "Nickname",
+      password: "Contraseña",
+    };
+    return labels[field] || "Campo";
+  }
+
   // Toast notification function
-  function showToast(message) {
+  function showToast(message, type = "success") {
     console.log(`Showing toast notification: "${message}"`);
     toast.textContent = message;
+
+    // Remove existing classes and add appropriate type class
+    toast.className = "toast";
+    if (type === "error") {
+      toast.classList.add("error");
+    } else if (type === "warning") {
+      toast.classList.add("warning");
+    }
+
     toast.classList.add("active");
 
     setTimeout(() => {
@@ -366,15 +462,6 @@ document.addEventListener("DOMContentLoaded", function () {
       toast.classList.remove("active");
     }, 3000);
   }
-
-  // Change password (would typically open another modal)
-  document
-    .getElementById("change-password")
-    .addEventListener("click", function () {
-      console.log("Change password button clicked");
-      showToast("Funcionalidad de cambio de contraseña");
-      // Implement password change functionality
-    });
 
   console.log("✅ Profile page initialization complete");
 });

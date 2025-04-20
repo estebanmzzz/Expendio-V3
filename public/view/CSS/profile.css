@@ -397,3 +397,78 @@ main {
     padding: 0.75rem;
   }
 }
+
+/* ... Mantén tu CSS existente y agrega/modifica estas partes ... */
+
+.profile-header {
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  border-radius: 16px 16px 0 0;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: white;
+  font-size: 4rem;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+}
+
+.profile-avatar .material-symbols-outlined {
+  font-size: 64px;
+}
+
+.profile-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+.profile-subtitle {
+  font-weight: 400;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+/* Campos de contraseña */
+.password-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Ajustes para reducir espacio */
+.section-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #3b82f6;
+}
+
+.section-title .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+
+.info-list {
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  padding: 0.75rem 0;
+}
+
+.info-label {
+  font-size: 0.9rem;
+}

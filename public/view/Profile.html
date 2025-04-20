@@ -20,9 +20,7 @@
         <div class="nav-item" onclick="location.href='/presupuestos'">
           Mis Presupuestos
         </div>
-        <div class="nav-item" onclick="location.href='/gastos'">
-          Mis Gastos
-        </div>
+        <div class="nav-item" onclick="location.href='/gastos'">Mis Gastos</div>
         <div class="nav-item" onclick="location.href='/categorias'">
           Mis Categorías
         </div>
@@ -47,7 +45,7 @@
         <div class="profile-body">
           <div class="profile-section">
             <h2 class="section-title">
-              <span class="material-symbols-outlined">person</span>
+              <span class="material-symbols-outlined">account_circle</span>
               Información Personal
             </h2>
             <ul class="info-list">
@@ -84,15 +82,6 @@
                   >
                 </div>
               </li>
-            </ul>
-          </div>
-
-          <div class="profile-section">
-            <h2 class="section-title">
-              <span class="material-symbols-outlined">contact_mail</span>
-              Información de Contacto
-            </h2>
-            <ul class="info-list">
               <li class="info-item editable">
                 <span class="info-label">Email:</span>
                 <div class="info-value">
@@ -104,22 +93,21 @@
                   >
                 </div>
               </li>
-              <li class="info-item">
+              <li class="info-item editable">
                 <span class="info-label">Contraseña:</span>
                 <div class="info-value">
-                  <button id="change-password" class="modal-btn modal-btn-save">
-                    Cambiar Contraseña
-                  </button>
+                  <span id="password">••••••••</span>
+                  <span
+                    class="material-symbols-outlined edit-icon"
+                    data-field="password"
+                    >edit</span
+                  >
                 </div>
               </li>
             </ul>
           </div>
 
           <div class="action-buttons">
-            <!--             <button class="btn btn-primary">
-              <span class="material-symbols-outlined">edit</span>
-              Editar Perfil Completo
-            </button> -->
             <button class="btn btn-danger" id="delete-account-btn">
               <span class="material-symbols-outlined">delete</span>
               Eliminar Cuenta
@@ -141,9 +129,25 @@
           <button class="modal-close" id="close-modal">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
+          <div class="form-group standard-field">
             <label class="form-label" id="edit-field-label">Campo</label>
             <input type="text" class="form-input" id="edit-field-input" />
+          </div>
+          <div class="form-group password-fields" style="display: none">
+            <label class="form-label">Contraseña actual</label>
+            <input
+              type="password"
+              class="form-input"
+              id="current-password-input"
+            />
+            <label class="form-label">Nueva contraseña</label>
+            <input type="password" class="form-input" id="new-password-input" />
+            <label class="form-label">Confirmar contraseña</label>
+            <input
+              type="password"
+              class="form-input"
+              id="confirm-password-input"
+            />
           </div>
         </div>
         <div class="modal-actions">
