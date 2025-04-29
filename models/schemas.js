@@ -24,6 +24,5 @@ module.exports = {
     monto: DataTypes.DECIMAL(10, 2),
     descripcion: DataTypes.TEXT,
     fecha_gasto: DataTypes.DATE,
-    //    usuario_id: DataTypes.INTEGER,
   },
 };
