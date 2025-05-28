@@ -11,50 +11,64 @@ body {
   color: #333;
 }
 
+/* NAVBAR UNIFICADO */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
 header {
   background-color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.5rem;
   background: linear-gradient(to right, #3b82f6, #2563eb);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  letter-spacing: -0.05em;
 }
 
 .nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-item {
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  transition: color 0.2s ease;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  color: #3b82f6;
+}
+
+.auth-links {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
-.nav-item {
-  cursor: pointer;
-  padding: 0.5rem 0.75rem;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  font-weight: 500;
-}
-
-.nav-item:hover {
-  background: linear-gradient(to right, #3b82f6, #2563eb);
-  color: white;
-  transform: translateY(-2px);
-}
-
 .user-avatar {
-  background: linear-gradient(to right, #3b82f6, #2563eb);
-  color: white;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -62,13 +76,17 @@ header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  color: #3b82f6;
+  transition: transform 0.2s ease, color 0.2s ease;
+  background-color: #f1f5f9;
 }
 
 .user-avatar:hover {
   transform: scale(1.1);
+  color: #2563eb;
 }
 
+/* CONTENIDO PRINCIPAL */
 main {
   display: flex;
   justify-content: center;
@@ -87,34 +105,41 @@ main {
 .profile-header {
   background: linear-gradient(to right, #3b82f6, #2563eb);
   color: white;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   position: relative;
+  border-radius: 16px 16px 0 0;
 }
 
 .profile-avatar {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   margin: 0 auto;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: #3b82f6;
-  font-size: 3rem;
+  color: white;
+  font-size: 4rem;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+}
+
+.profile-avatar .material-symbols-outlined {
+  font-size: 64px;
 }
 
 .profile-title {
   font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   font-weight: 700;
 }
 
 .profile-subtitle {
   font-weight: 400;
-  opacity: 0.9;
+  opacity: 0.8;
+  font-size: 0.9rem;
 }
 
 .profile-body {
@@ -126,27 +151,28 @@ main {
 }
 
 .section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #444;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  color: #3b82f6;
 }
 
-.section-title span {
-  margin-right: 0.5rem;
+.section-title .material-symbols-outlined {
+  font-size: 1.3rem;
 }
 
 .info-list {
   list-style: none;
+  margin-bottom: 1.5rem;
 }
 
 .info-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.75rem 0;
   border-bottom: 1px solid #f1f1f1;
   transition: background-color 0.2s ease;
 }
@@ -158,6 +184,7 @@ main {
 .info-label {
   color: #666;
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .info-value {
@@ -236,7 +263,7 @@ main {
   transform: translateY(-2px);
 }
 
-/* Modal Styles */
+/* MODALES */
 .modal {
   position: fixed;
   top: 0;
@@ -318,6 +345,12 @@ main {
   border-color: #3b82f6;
 }
 
+.password-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -352,7 +385,7 @@ main {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-/* Toast Notification */
+/* TOAST NOTIFICATION */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -373,20 +406,24 @@ main {
   opacity: 1;
 }
 
-/* Responsive Styles */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .nav-links div:not(.user-avatar) {
+  .nav-links {
     display: none;
   }
-
-  .nav-links.main-nav {
-    display: none;
+  
+  .header-container {
+    padding: 0 1rem;
   }
 
   .profile-avatar {
     width: 80px;
     height: 80px;
     font-size: 2.5rem;
+  }
+
+  .profile-avatar .material-symbols-outlined {
+    font-size: 48px;
   }
 
   .profile-title {
@@ -396,79 +433,4 @@ main {
   .btn {
     padding: 0.75rem;
   }
-}
-
-/* ... Mantén tu CSS existente y agrega/modifica estas partes ... */
-
-.profile-header {
-  background: linear-gradient(to right, #3b82f6, #2563eb);
-  color: white;
-  padding: 1.5rem;
-  text-align: center;
-  position: relative;
-  border-radius: 16px 16px 0 0;
-}
-
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  color: white;
-  font-size: 4rem;
-  border: 4px solid rgba(255, 255, 255, 0.4);
-}
-
-.profile-avatar .material-symbols-outlined {
-  font-size: 64px;
-}
-
-.profile-title {
-  font-size: 1.8rem;
-  margin-bottom: 0.25rem;
-  font-weight: 700;
-}
-
-.profile-subtitle {
-  font-weight: 400;
-  opacity: 0.8;
-  font-size: 0.9rem;
-}
-
-/* Campos de contraseña */
-.password-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Ajustes para reducir espacio */
-.section-title {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #3b82f6;
-}
-
-.section-title .material-symbols-outlined {
-  font-size: 1.3rem;
-}
-
-.info-list {
-  margin-bottom: 1.5rem;
-}
-
-.info-item {
-  padding: 0.75rem 0;
-}
-
-.info-label {
-  font-size: 0.9rem;
 }
