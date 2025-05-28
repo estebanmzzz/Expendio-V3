@@ -36,13 +36,11 @@ exports.getPresupuestos = (req, res) => {
   );
 };
 
-// Serve CSS files
 exports.getCSS = (req, res) => {
   const cssFile = req.params.file;
   res.sendFile(path.join(__dirname, "../", "public", "view", "CSS", cssFile));
 };
 
-// Serve JS files
 exports.getJS = (req, res) => {
   const jsFile = req.params.file;
   res.sendFile(path.join(__dirname, "../", "public", "view", "JS", jsFile));

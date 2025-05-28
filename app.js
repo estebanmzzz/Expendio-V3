@@ -37,6 +37,7 @@ app.use(bodyParser.json());
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", viewRoutes);
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/usuarios", usuarioRoutes);
