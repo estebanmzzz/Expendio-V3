@@ -20,13 +20,10 @@ const categoriaFilter = document.getElementById("categoria-filter");
 const subcategoriaFilter = document.getElementById("subcategoria-filter");
 const aplicarFiltrosBtn = document.getElementById("aplicar-filtros");
 const limpiarFiltrosBtn = document.getElementById("limpiar-filtros");
-
-// Paginación
 const prevPageBtn = document.getElementById("prev-page");
 const nextPageBtn = document.getElementById("next-page");
 const pageInfo = document.getElementById("page-info");
 
-// Variables para filtros y paginación
 let allGastos = [];
 let filteredGastos = [];
 let currentPage = 1;
@@ -40,7 +37,6 @@ let activeFilters = {
   subcategoria: "",
 };
 
-// Avatar click
 const userAvatar = document.querySelector(".user-avatar");
 if (userAvatar) {
   userAvatar.addEventListener("click", function () {
@@ -50,7 +46,6 @@ if (userAvatar) {
   console.error("Elemento .user-avatar no encontrado.");
 }
 
-// Fecha de HOY en el campo
 document.addEventListener("DOMContentLoaded", () => {
   const fechaInput = document.getElementById("fecha_gasto");
   if (fechaInput) {
@@ -59,13 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaInput.value = formattedDate;
   }
 
-  // Inicializar fechas para filtros
   initializeDates();
 
-  // Inicializar handlers de eventos
   initializeEventHandlers();
 
-  // Cargar datos
   loadCategorias().then(() => {
     fetchGastos();
   });
@@ -75,24 +67,20 @@ function initializeDates() {
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  // Para filtros rápidos - solo la parte de fecha (YYYY-MM-DD)
   dateToInput.value = today.toISOString().split("T")[0];
   dateFromInput.value = firstDayOfMonth.toISOString().split("T")[0];
 
-  // Para filtros predeterminados (mes actual) - objetos Date completos
   activeFilters.to = new Date(today);
-  activeFilters.to.setHours(23, 59, 59, 999); // Final del día
+  activeFilters.to.setHours(23, 59, 59, 999); 
   activeFilters.from = new Date(firstDayOfMonth);
-  activeFilters.from.setHours(0, 0, 0, 0); // Inicio del día
+  activeFilters.from.setHours(0, 0, 0, 0); 
 }
 
 function initializeEventHandlers() {
-  // Toggle filtros
   toggleFilterBtn.addEventListener("click", () => {
     filterBody.classList.toggle("active");
   });
 
-  // Quick filter buttons
   quickFilterBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       quickFilterBtns.forEach((b) => b.classList.remove("active"));
@@ -110,7 +98,6 @@ function initializeEventHandlers() {
     });
   });
 
-  // Aplicar filtros
   aplicarFiltrosBtn.addEventListener("click", () => {
     if (activeFilters.period === "custom") {
       const fromDate = new Date(dateFromInput.value);
@@ -122,7 +109,6 @@ function initializeEventHandlers() {
       activeFilters.from = fromDate;
       activeFilters.to = toDate;
 
-      // Validar rango de fechas
       if (activeFilters.from > activeFilters.to) {
         showToast(
           "La fecha inicial no puede ser posterior a la fecha final",
@@ -138,13 +124,11 @@ function initializeEventHandlers() {
     applyFilters();
   });
 
-  // Limpiar filtros
   limpiarFiltrosBtn.addEventListener("click", () => {
     resetFilters();
     applyFilters();
   });
 
-  // Modal events
   document.querySelectorAll(".close-modal").forEach((btn) => {
     btn.addEventListener("click", () => {
       editModal.classList.remove("active");
@@ -152,7 +136,6 @@ function initializeEventHandlers() {
     });
   });
 
-  // Cancel buttons in modals
   document.getElementById("cancel-edit").addEventListener("click", () => {
     editModal.classList.remove("active");
   });
@@ -161,17 +144,14 @@ function initializeEventHandlers() {
     deleteModal.classList.remove("active");
   });
 
-  // Save edit button
   document
     .getElementById("save-edit")
     .addEventListener("click", saveEditedExpense);
 
-  // Confirm delete button
   document
     .getElementById("confirm-delete")
     .addEventListener("click", confirmDeleteExpense);
 
-  // Pagination
   prevPageBtn.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -187,7 +167,6 @@ function initializeEventHandlers() {
     }
   });
 
-  // Categoría change events
   categoriaSelect.addEventListener("change", updateSubcategorias);
   categoriaFilter.addEventListener("change", updateSubcategoriasFilter);
   editCategoriaSelect.addEventListener("change", updateEditSubcategorias);
@@ -199,32 +178,26 @@ function updateDateRangeFromPeriod(period) {
 
   switch (period) {
     case "current":
-      // Mes actual
       fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
       break;
     case "last3":
-      // Últimos 3 meses
       fromDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
       break;
     default:
-      // Por defecto mes actual
       fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
   }
 
-  // Establecer hora para abarcar todo el período
   activeFilters.from = new Date(fromDate);
   activeFilters.from.setHours(0, 0, 0, 0);
 
   activeFilters.to = new Date(today);
   activeFilters.to.setHours(23, 59, 59, 999);
 
-  // Actualizar inputs de fecha
   dateFromInput.value = activeFilters.from.toISOString().split("T")[0];
   dateToInput.value = activeFilters.to.toISOString().split("T")[0];
 }
 
 function resetFilters() {
-  // Reset period filter
   quickFilterBtns.forEach((btn) => {
     btn.classList.remove("active");
     if (btn.dataset.period === "current") {
@@ -235,31 +208,25 @@ function resetFilters() {
   activeFilters.period = "current";
   updateDateRangeFromPeriod("current");
 
-  // Reset category filters
   categoriaFilter.value = "";
   subcategoriaFilter.value = "";
   activeFilters.categoria = "";
   activeFilters.subcategoria = "";
 
-  // Hide custom date range
   customDateRange.style.display = "none";
 }
 
 function applyFilters() {
-  // Comenzar con todos los gastos
   filteredGastos = [...allGastos];
 
   console.log("Filtrando gastos...");
   console.log("Total antes de filtrar:", filteredGastos.length);
   console.log("Filtros activos:", activeFilters);
 
-  // Filter by date range
   if (activeFilters.from instanceof Date && activeFilters.to instanceof Date) {
     filteredGastos = filteredGastos.filter((gasto) => {
-      // Convertir la cadena de fecha a objeto Date con hora 00:00:00
       const gastoDate = new Date(gasto.fecha_gasto);
 
-      // Ajustar para comparación (utilizando solo la fecha)
       const gastoDateOnly = new Date(
         gastoDate.getFullYear(),
         gastoDate.getMonth(),
@@ -282,27 +249,22 @@ function applyFilters() {
     console.log("Después de filtro de fechas:", filteredGastos.length);
   }
 
-  // Filter by category
   if (activeFilters.categoria) {
     console.log("Filtrando por categoría:", activeFilters.categoria);
 
     filteredGastos = filteredGastos.filter((gasto) => {
-      // Buscar la categoría principal para este gasto
       const categoria = getCategoryById(gasto.categoria_id);
 
-      // Si es subcategoría, obtener su categoría padre
       if (categoria && categoria.categoria_padre_id) {
         return categoria.categoria_padre_id == activeFilters.categoria;
       }
 
-      // Si es categoría principal
       return gasto.categoria_id == activeFilters.categoria;
     });
 
     console.log("Después de filtro de categoría:", filteredGastos.length);
   }
 
-  // Filter by subcategory
   if (activeFilters.subcategoria) {
     console.log("Filtrando por subcategoría:", activeFilters.subcategoria);
 
@@ -313,10 +275,8 @@ function applyFilters() {
     console.log("Después de filtro de subcategoría:", filteredGastos.length);
   }
 
-  // Reset to first page
   currentPage = 1;
 
-  // Render filtered expenses
   renderExpenses(filteredGastos);
 }
 
@@ -330,13 +290,11 @@ function getUserId() {
   }
 }
 
-// Formateo de fecha
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "2-digit" };
   return new Date(dateString).toLocaleDateString("es-ES", options);
 }
 
-// Formateo de monto
 function formatAmount(amount) {
   return amount.toLocaleString("es-ES", {
     style: "currency",
@@ -344,9 +302,7 @@ function formatAmount(amount) {
   });
 }
 
-// Rendereo de gastos con paginación
 function renderExpenses(gastos) {
-  // Clear the container
   expensesList.innerHTML = "";
 
   if (gastos.length === 0) {
@@ -359,24 +315,20 @@ function renderExpenses(gastos) {
 
   noExpensesMessage.style.display = "none";
 
-  // Calculate pagination
   const totalPages = Math.ceil(gastos.length / itemsPerPage);
   const start = (currentPage - 1) * itemsPerPage;
   const end = Math.min(start + itemsPerPage, gastos.length);
   const paginatedGastos = gastos.slice(start, end);
 
-  // Update pagination controls
   prevPageBtn.disabled = currentPage === 1;
   nextPageBtn.disabled = currentPage === totalPages;
   pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
 
-  // Render paginated expenses
   paginatedGastos.forEach((expense) => {
     const expenseItem = document.createElement("div");
     expenseItem.className = "expense-item";
     expenseItem.dataset.id = expense.gasto_id;
 
-    // Find category and subcategory names
     const categoria = getCategoryById(expense.categoria_id);
     const categoriaName = categoria ? categoria.nombre : "Sin categoría";
     const subcategoriaName = expense.subcategoria_nombre || "";
@@ -405,7 +357,6 @@ function renderExpenses(gastos) {
       </div>
     `;
 
-    // Add event listeners for edit and delete buttons
     const editBtn = expenseItem.querySelector(".edit-btn");
     const deleteBtn = expenseItem.querySelector(".delete-btn");
 
@@ -424,50 +375,41 @@ function openEditModal(expense) {
   const editMonto = document.getElementById("edit-monto");
   const editFechaGasto = document.getElementById("edit-fecha-gasto");
 
-  // Fill form with expense data
   editGastoId.value = expense.gasto_id;
   editDescripcion.value = expense.descripcion || "";
   editMonto.value = expense.monto;
 
-  // Format date correctly (YYYY-MM-DD)
   let fechaValue = expense.fecha_gasto;
   if (fechaValue.includes("T")) {
     fechaValue = fechaValue.split("T")[0];
   }
   editFechaGasto.value = fechaValue;
 
-  // Load categories
   loadEditCategories();
 
-  // Select the right category and subcategory
   setTimeout(() => {
     const categoria = getCategoryById(expense.categoria_id);
 
     if (categoria && categoria.categoria_padre_id) {
-      // Es una subcategoría
       editCategoriaSelect.value = categoria.categoria_padre_id;
 
-      // Trigger change event to load subcategories
       const event = new Event("change");
       editCategoriaSelect.dispatchEvent(event);
 
-      // After subcategories are loaded, select the correct one
       setTimeout(() => {
         editSubcategoriaSelect.value = expense.categoria_id;
       }, 100);
     } else {
-      // Es una categoría principal
       editCategoriaSelect.value = expense.categoria_id;
 
-      // Trigger change event to load subcategories
       const event = new Event("change");
       editCategoriaSelect.dispatchEvent(event);
     }
   }, 100);
 
-  // Show modal
   editModal.classList.add("active");
 }
+
 
 function saveEditedExpense() {
   const gastoId = document.getElementById("edit-gasto-id").value;
@@ -485,7 +427,7 @@ function saveEditedExpense() {
     descripcion: descripcion,
     monto: parseFloat(monto),
     categoria_id: categoriaId,
-    fecha_gasto: fechaGasto,
+    fecha_gasto: fechaGasto, 
   };
 
   updateExpense(gastoId, updatedData);
@@ -493,6 +435,8 @@ function saveEditedExpense() {
 
 async function updateExpense(gastoId, updatedData) {
   try {
+    console.log("Enviando datos de actualización:", updatedData); 
+
     const response = await fetch(
       `http://localhost:3000/api/gastos/${gastoId}`,
       {
@@ -505,28 +449,29 @@ async function updateExpense(gastoId, updatedData) {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `HTTP error! status: ${response.status}`
+      );
     }
 
-    // Close modal
+    const result = await response.json();
+    console.log("Respuesta del servidor:", result);
+
     editModal.classList.remove("active");
 
-    // Show success message
     showToast("Gasto actualizado correctamente");
 
-    // Refresh expenses
     fetchGastos();
   } catch (error) {
     console.error("Error updating expense:", error);
-    showToast("Error al actualizar el gasto", "error");
+    showToast(`Error al actualizar el gasto: ${error.message}`, "error");
   }
 }
 
 function openDeleteModal(gastoId) {
-  // Store the ID for later use
   deleteModal.dataset.gastoId = gastoId;
 
-  // Show modal
   deleteModal.classList.add("active");
 }
 
@@ -554,13 +499,10 @@ async function deleteExpense(gastoId) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    // Close modal
     deleteModal.classList.remove("active");
 
-    // Show success message
     showToast("Gasto eliminado correctamente");
 
-    // Refresh expenses
     fetchGastos();
   } catch (error) {
     console.error("Error deleting expense:", error);
@@ -568,7 +510,6 @@ async function deleteExpense(gastoId) {
   }
 }
 
-// FETCH DE GASTOS
 async function fetchGastos() {
   const userId = getUserId();
 
@@ -585,14 +526,12 @@ async function fetchGastos() {
     }
     const gastos = await response.json();
 
-    // Sort by date (newest first)
     allGastos = gastos.sort(
       (a, b) => new Date(b.fecha_gasto) - new Date(a.fecha_gasto)
     );
 
     console.log("Gastos cargados:", allGastos.length);
 
-    // Apply filters
     applyFilters();
   } catch (error) {
     console.error("Error fetching gastos:", error);
@@ -622,7 +561,6 @@ async function loadCategorias() {
 
     console.log("Categorías cargadas:", todasLasCategorias.length);
 
-    // Populate main category selectors
     populateCategoriasSelect(categoriaSelect);
     populateCategoriasSelect(categoriaFilter, true);
   } catch (error) {
@@ -634,10 +572,8 @@ async function loadCategorias() {
 function populateCategoriasSelect(selectElement, includeAllOption = false) {
   if (!selectElement) return;
 
-  // Clear current options
   selectElement.innerHTML = "";
 
-  // Add default option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = includeAllOption
@@ -645,12 +581,10 @@ function populateCategoriasSelect(selectElement, includeAllOption = false) {
     : "Selecciona una categoría";
   selectElement.appendChild(defaultOption);
 
-  // Get main categories (no parent category)
   const categoriasPrincipales = todasLasCategorias.filter(
     (cat) => !cat.categoria_padre_id
   );
 
-  // Add options for main categories
   categoriasPrincipales.forEach((categoria) => {
     const option = document.createElement("option");
     option.value = categoria.categoria_id;
@@ -756,7 +690,6 @@ function loadEditCategories() {
   populateCategoriasSelect(editCategoriaSelect);
 }
 
-// Add expense form submission
 if (addExpenseForm) {
   addExpenseForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -818,30 +751,23 @@ if (addExpenseForm) {
   });
 }
 
-// Toast notification
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
   const toastMessage = document.getElementById("toast-message");
 
-  // Remove existing classes
   toast.classList.remove("success", "error", "warning");
 
-  // Add appropriate class
   toast.classList.add(type);
 
-  // Set message
   toastMessage.textContent = message;
 
-  // Show toast
   toast.classList.add("active");
 
-  // Hide after 3 seconds
   setTimeout(() => {
     toast.classList.remove("active");
   }, 3000);
 }
 
-// Helper function for category names
 function getCategoryById(categoryId) {
   return todasLasCategorias.find((cat) => cat.categoria_id == categoryId);
 }

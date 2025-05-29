@@ -330,7 +330,6 @@ async function loadExpensesAndCreateChart(period = "month", date = new Date()) {
 
     const expenses = await response.json();
 
-    // Obtener el presupuesto actual para el período filtrado
     const budgetResponse = await fetch(`${API_URL}${userId}`);
     if (!budgetResponse.ok) {
       throw new Error("Error al cargar los presupuestos");
@@ -341,14 +340,12 @@ async function loadExpensesAndCreateChart(period = "month", date = new Date()) {
       return;
     }
 
-    // Filtrar y ordenar presupuestos
     const filteredBudgets = filterBudgetsByPeriod(budgetsData, period, date);
 
     if (filteredBudgets.length === 0) return;
 
     const currentBudget = filteredBudgets[0];
 
-    // Calcular gastos para el período filtrado
     const filteredExpenses = filterExpensesByPeriod(expenses, period, date);
 
     const totalExpenses = filteredExpenses.reduce(
@@ -362,7 +359,6 @@ async function loadExpensesAndCreateChart(period = "month", date = new Date()) {
   }
 }
 
-// Función para filtrar gastos por período
 function filterExpensesByPeriod(expenses, period, date) {
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -373,14 +369,11 @@ function filterExpensesByPeriod(expenses, period, date) {
     const expenseMonth = expenseDate.getMonth();
 
     if (period === "month") {
-      // Filtrar por mes específico
       return expenseYear === year && expenseMonth === month;
     } else if (period === "quarter") {
-      // Filtrar por trimestre
       const quarterStart = new Date(year, month - 2, 1);
       return expenseDate >= quarterStart && expenseDate <= date;
     } else if (period === "year") {
-      // Filtrar por año
       return expenseYear === year;
     }
 
@@ -388,22 +381,17 @@ function filterExpensesByPeriod(expenses, period, date) {
   });
 }
 
-// Función para crear el gráfico
 function createBudgetVsExpensesChart(budgetAmount, expensesAmount) {
   const chartContainer = document.getElementById("budgetVsExpensesChart");
   if (!chartContainer) return;
 
-  // Limpiar el contenedor
   chartContainer.innerHTML = "";
 
-  // Calcular porcentaje de presupuesto utilizado
   const percentageUsed = Math.min(100, (expensesAmount / budgetAmount) * 100);
 
-  // Crear elementos visuales
   const budgetBar = document.createElement("div");
   budgetBar.className = "budget-vs-expenses-container";
 
-  // Añadir etiquetas
   const labels = document.createElement("div");
   labels.className = "budget-vs-expenses-labels";
   labels.innerHTML = `
@@ -411,7 +399,6 @@ function createBudgetVsExpensesChart(budgetAmount, expensesAmount) {
     <div class="expenses-label">Gastos: ${formatMoney(expensesAmount)}</div>
   `;
 
-  // Añadir barra de progreso
   const progressContainer = document.createElement("div");
   progressContainer.className = "budget-progress-container";
 
@@ -419,24 +406,20 @@ function createBudgetVsExpensesChart(budgetAmount, expensesAmount) {
   progressBar.className = "budget-progress-bar";
   progressBar.style.width = `${percentageUsed}%`;
 
-  // Determinar color según el porcentaje usado
   if (percentageUsed < 70) {
-    progressBar.style.backgroundColor = "#10b981"; // Verde para buen estado
+    progressBar.style.backgroundColor = "#10b981"; 
   } else if (percentageUsed < 90) {
-    progressBar.style.backgroundColor = "#f59e0b"; // Amarillo para precaución
+    progressBar.style.backgroundColor = "#f59e0b"; 
   } else {
-    progressBar.style.backgroundColor = "#ef4444"; // Rojo para excedido
+    progressBar.style.backgroundColor = "#ef4444"; 
   }
 
-  // Añadir indicador de porcentaje
   progressBar.textContent = `${percentageUsed.toFixed(1)}%`;
 
-  // Armar estructura
   progressContainer.appendChild(progressBar);
   budgetBar.appendChild(labels);
   budgetBar.appendChild(progressContainer);
 
-  // Mensaje de estado
   const statusMessage = document.createElement("div");
   statusMessage.className = "budget-status-message";
 
@@ -456,7 +439,6 @@ function createBudgetVsExpensesChart(budgetAmount, expensesAmount) {
     statusMessage.style.color = "#ef4444";
   }
 
-  // Añadir todo al contenedor
   chartContainer.appendChild(budgetBar);
   chartContainer.appendChild(statusMessage);
 }

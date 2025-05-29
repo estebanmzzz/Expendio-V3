@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM loaded, initializing profile page...");
 
-  // Get user data
   let userData;
-  let userId; // Necesitamos guardar el ID del usuario
+  let userId; 
 
   try {
     console.log("Attempting to get user data from sessionStorage...");
@@ -14,13 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
       userData = JSON.parse(data);
       console.log("Parsed user data:", userData);
 
-      // Log all available properties
       console.log("Available properties in user data:");
       for (const key in userData) {
         console.log(`- ${key}: ${userData[key]}`);
       }
 
-      // Try to get the user ID using different possible property names
       userId = userData.usuario_id;
       console.log("First attempt - userId from usuario_id:", userId);
 
@@ -30,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (userId === undefined) {
-        // Try other potential ID field names
         const possibleIdFields = ["usuarioId", "user_id", "uid", "idUsuario"];
         for (const field of possibleIdFields) {
           if (userData[field] !== undefined) {
@@ -44,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
-      // If we still don't have a userId, log an error
       if (userId === undefined) {
         console.error("⚠️ User ID not found in session data:", userData);
         console.log("Session data keys available:", Object.keys(userData));
@@ -53,14 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Successfully found user ID:", userId);
       }
 
-      // Display user data
       console.log("Setting display fields with user data...");
       document.getElementById("nombre").textContent = userData.nombre || "";
       document.getElementById("apellido").textContent = userData.apellido || "";
       document.getElementById("email").textContent = userData.email || "";
       document.getElementById("nickname").textContent = userData.nickname || "";
 
-      // Update profile greeting
       document.getElementById("profile-greeting").textContent = `Hola, ${
         userData.nickname || "usuario"
       }`;
@@ -82,12 +75,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("Setting up UI elements and event listeners...");
 
-  // Modal elements
   const editModal = document.getElementById("edit-modal");
   const deleteModal = document.getElementById("delete-modal");
   const toast = document.getElementById("toast-notification");
 
-  // Check if all UI elements exist
   const requiredElements = {
     "edit-modal": editModal,
     "delete-modal": deleteModal,
@@ -100,18 +91,15 @@ document.addEventListener("DOMContentLoaded", function () {
     password: document.getElementById("password"),
   };
 
-  // Check if any elements are missing
   for (const [id, element] of Object.entries(requiredElements)) {
     if (!element) {
       console.error(`❌ Required element #${id} not found in the DOM!`);
     }
   }
 
-  // Variables to track current field being edited
   let currentField = "";
   let currentValue = "";
 
-  // Edit field functionality
   console.log("Setting up edit icons...");
   const editIcons = document.querySelectorAll(".edit-icon");
   console.log(`Found ${editIcons.length} edit icons`);
@@ -121,14 +109,12 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(`Setting up listener for edit icon with data-field="${field}"`);
 
     icon.addEventListener("click", function () {
-      // Get field to edit
       currentField = this.getAttribute("data-field");
       currentValue = document.getElementById(currentField).textContent;
       console.log(
         `Edit clicked for field: ${currentField}, current value: ${currentValue}`
       );
 
-      // Update modal
       document.getElementById("edit-field-label").textContent =
         getFieldLabel(currentField);
 
@@ -136,28 +122,23 @@ document.addEventListener("DOMContentLoaded", function () {
       const passwordFields = document.querySelector(".password-fields");
 
       if (currentField === "password") {
-        // Show password fields, hide standard field
         standardField.style.display = "none";
         passwordFields.style.display = "block";
 
-        // Clear password fields
         document.getElementById("current-password-input").value = "";
         document.getElementById("new-password-input").value = "";
         document.getElementById("confirm-password-input").value = "";
       } else {
-        // Show standard field, hide password fields
         standardField.style.display = "block";
         passwordFields.style.display = "none";
         document.getElementById("edit-field-input").value = currentValue;
       }
 
-      // Show modal
       console.log("Opening edit modal");
       editModal.classList.add("active");
     });
   });
 
-  // Close edit modal
   document.getElementById("close-modal").addEventListener("click", function () {
     console.log("Closing edit modal via close button");
     editModal.classList.remove("active");
@@ -168,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
     editModal.classList.remove("active");
   });
 
-  // Save edit - Updated to handle password change
   document
     .getElementById("save-edit")
     .addEventListener("click", async function () {
@@ -185,14 +165,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const newValue = document.getElementById("edit-field-input").value;
     console.log(`Attempting to update ${currentField} to: ${newValue}`);
 
-    // Verificar que tenemos un ID de usuario válido
     if (!userId) {
       console.error("❌ Cannot update: userId is undefined or null");
       showToast("Error: No se pudo encontrar el ID de usuario");
       return;
     }
 
-    // Crear objeto con el campo a actualizar
     const updateData = {};
     updateData[currentField] = newValue;
     console.log("Update payload:", JSON.stringify(updateData));
@@ -200,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       console.log("Sending PUT request...");
-      // Llamar a la API para actualizar el usuario
       const response = await fetch(
         `http://localhost:3000/api/usuarios/${userId}`,
         {
@@ -218,13 +195,11 @@ document.addEventListener("DOMContentLoaded", function () {
         [...response.headers].map((h) => `${h[0]}: ${h[1]}`).join(", ")
       );
 
-      // Try to get response text first to debug any JSON parse errors
       const responseText = await response.text();
       console.log("Raw response:", responseText);
 
       let data;
       try {
-        // Convert text back to JSON if possible
         data = responseText ? JSON.parse(responseText) : {};
         console.log("Parsed response data:", data);
       } catch (jsonError) {
@@ -240,16 +215,13 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       }
 
-      // Actualizar el valor mostrado
       console.log(`Updating displayed ${currentField} to: ${newValue}`);
       document.getElementById(currentField).textContent = newValue;
 
-      // Actualizar datos de usuario en sessionStorage
       userData[currentField] = newValue;
       sessionStorage.setItem("user", JSON.stringify(userData));
       console.log("Updated sessionStorage with new data");
 
-      // Actualizar saludo del perfil si se cambió el nickname
       if (currentField === "nickname") {
         console.log("Updating profile greeting for new nickname");
         document.getElementById(
@@ -257,11 +229,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ).textContent = `Hola, ${newValue}`;
       }
 
-      // Cerrar modal
       console.log("Closing edit modal after successful update");
       editModal.classList.remove("active");
 
-      // Mostrar notificación de éxito
       showToast("Cambios guardados exitosamente");
       console.log("✅ Update completed successfully");
     } catch (error) {
@@ -280,7 +250,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "confirm-password-input"
     ).value;
 
-    // Validaciones
     if (!currentPassword || !newPassword || !confirmPassword) {
       showToast("Por favor, completa todos los campos", "error");
       return;
@@ -318,10 +287,8 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error(errorData.error || "Error al cambiar la contraseña");
       }
 
-      // Cerrar modal
       editModal.classList.remove("active");
 
-      // Mostrar notificación de éxito
       showToast("Contraseña actualizada correctamente");
     } catch (error) {
       console.error("Error al cambiar contraseña:", error);
@@ -329,7 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Delete account functionality - Updated to use deleteUsuario controller
   document
     .getElementById("delete-account-btn")
     .addEventListener("click", function () {
@@ -356,7 +322,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", async function () {
       console.log("Confirm delete button clicked");
 
-      // Verificar que tenemos un ID de usuario válido
       if (!userId) {
         console.error("❌ Cannot delete: userId is undefined or null");
         showToast("Error: No se pudo encontrar el ID de usuario");
@@ -368,7 +333,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         console.log("Sending DELETE request...");
-        // Llamar a la API para eliminar la cuenta
         const response = await fetch(
           `http://localhost:3000/api/usuarios/${userId}`,
           {
@@ -381,13 +345,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Response status:", response.status);
 
-        // Try to get response text first to debug any JSON parse errors
         const responseText = await response.text();
         console.log("Raw response:", responseText);
 
         let data;
         try {
-          // Convert text back to JSON if possible
           data = responseText ? JSON.parse(responseText) : {};
           console.log("Parsed response data:", data);
         } catch (jsonError) {
@@ -403,12 +365,10 @@ document.addEventListener("DOMContentLoaded", function () {
           );
         }
 
-        // Limpiar sessionStorage
         console.log("Clearing session storage");
         sessionStorage.clear();
         showToast("Cuenta eliminada exitosamente");
 
-        // Redirigir después de un breve retraso
         console.log("Redirecting to login page in 2 seconds...");
         setTimeout(() => {
           window.location.href = "/";
@@ -421,7 +381,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-  // Logout functionality
   document.getElementById("logout-btn").addEventListener("click", function () {
     console.log("Logout button clicked");
     console.log("Clearing session storage");
@@ -430,7 +389,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "/";
   });
 
-  // Get label based on field name
   function getFieldLabel(field) {
     const labels = {
       nombre: "Nombre",
@@ -442,12 +400,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return labels[field] || "Campo";
   }
 
-  // Toast notification function
   function showToast(message, type = "success") {
     console.log(`Showing toast notification: "${message}"`);
     toast.textContent = message;
 
-    // Remove existing classes and add appropriate type class
     toast.className = "toast";
     if (type === "error") {
       toast.classList.add("error");

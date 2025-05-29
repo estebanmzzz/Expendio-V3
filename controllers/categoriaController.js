@@ -155,9 +155,8 @@ exports.updateCategoria = async (req, res) => {
 
 exports.deleteCategoria = async (req, res) => {
   const { id } = req.params;
-  const usuario_id = req.body.usuario_id || req.user?.id; 
+  const usuario_id = req.body.usuario_id || req.user?.id;
 
-  // Verifica que la categoría pertenece al usuario
   try {
     const [categoryRows] = await pool.query(
       "SELECT * FROM categorias WHERE categoria_id = ?",
@@ -168,7 +167,6 @@ exports.deleteCategoria = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // Si la categoría es default, no se puede eliminar
     if (categoryRows[0].usuario_id === 0) {
       return res
         .status(403)

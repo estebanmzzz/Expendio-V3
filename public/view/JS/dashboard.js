@@ -1,11 +1,9 @@
-// Variables globales
 let currentUser = null;
 let presupuestoActual = null;
 let gastos = [];
 let categorias = [];
-let ultimosGastos = []; // Para la sección de últimos gastos
+let ultimosGastos = [];
 
-// Referencias DOM
 const totalBudgetElement = document.getElementById("totalBudget");
 const gastadoBudgetElement = document.getElementById("gastadoBudget");
 const restanteBudgetElement = document.getElementById("restanteBudg");
@@ -17,7 +15,6 @@ const categoriaSelect = document.getElementById("categoria");
 const subcategoriaSelect = document.getElementById("subcategoria");
 const verMasButton = document.getElementById("verMasButton");
 
-// Avatar click
 const userAvatar = document.querySelector(".user-avatar");
 if (userAvatar) {
   userAvatar.addEventListener("click", function () {
@@ -27,11 +24,9 @@ if (userAvatar) {
   console.error("Elemento .user-avatar no encontrado.");
 }
 
-// Inicialización
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM cargado, inicializando dashboard...");
 
-  // Obtenemos el usuario de la sesión
   try {
     currentUser = JSON.parse(sessionStorage.getItem("user"));
     if (!currentUser || !currentUser.id) {
@@ -46,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Inicializamos la fecha actual en el formulario
   const fechaInput = document.getElementById("fecha_gasto");
   if (fechaInput) {
     const today = new Date();
@@ -54,14 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaInput.value = formattedDate;
   }
 
-  // Inicializamos los datos
   initializeData();
 
-  // Event listeners
   setupEventListeners();
 });
 
-// Función para inicializar los datos
 async function initializeData() {
   try {
     // Cargamos los datos en paralelo para mejor rendimiento
@@ -81,7 +72,6 @@ async function initializeData() {
   }
 }
 
-// Carga las categorías del usuario
 async function loadCategorias() {
   try {
     const response = await fetch(
@@ -94,7 +84,6 @@ async function loadCategorias() {
     categorias = data;
     console.log("Categorías cargadas:", categorias.length);
 
-    // Populamos los selects de categorías
     populateCategoriasSelect(categoriaSelect);
 
     return categorias;
@@ -105,7 +94,6 @@ async function loadCategorias() {
   }
 }
 
-// Carga el presupuesto actual del usuario
 async function loadPresupuesto() {
   try {
     const response = await fetch(
@@ -117,7 +105,6 @@ async function loadPresupuesto() {
     const data = await response.json();
 
     if (data && data.length > 0) {
-      // Ordenamos por fecha y tomamos el más reciente
       const sortedBudgets = data.sort((a, b) => {
         return new Date(b.fecha_asignacion) - new Date(a.fecha_asignacion);
       });
@@ -142,7 +129,6 @@ async function loadPresupuesto() {
   }
 }
 
-// Carga los gastos del usuario
 async function loadGastos() {
   try {
     const response = await fetch(
@@ -155,7 +141,6 @@ async function loadGastos() {
     gastos = await response.json();
     console.log("Gastos cargados:", gastos.length);
 
-    // Filtramos los gastos para obtener los del mes actual
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
@@ -168,7 +153,6 @@ async function loadGastos() {
       );
     });
 
-    // Ordenamos por fecha (más recientes primero) y tomamos los últimos 5
     ultimosGastos = gastos
       .sort((a, b) => new Date(b.fecha_gasto) - new Date(a.fecha_gasto))
       .slice(0, 5);
@@ -183,7 +167,6 @@ async function loadGastos() {
   }
 }
 
-// Actualiza las estadísticas en el dashboard
 function updateStats() {
   if (!presupuestoActual) {
     totalBudgetElement.textContent = "No hay presupuesto";
@@ -193,7 +176,6 @@ function updateStats() {
     return;
   }
 
-  // Calculamos el total gastado en el mes actual
   const today = new Date();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
@@ -213,19 +195,15 @@ function updateStats() {
   const totalPresupuesto = parseFloat(presupuestoActual.monto);
   const totalRestante = Math.max(0, totalPresupuesto - totalGastado);
 
-  // Calculamos el porcentaje de presupuesto utilizado
   let porcentajeUtilizado = (totalGastado / totalPresupuesto) * 100;
   porcentajeUtilizado = Math.min(100, porcentajeUtilizado); // Máximo 100%
 
-  // Actualizamos los elementos del DOM
   totalBudgetElement.textContent = formatMoney(totalPresupuesto);
   gastadoBudgetElement.textContent = formatMoney(totalGastado);
   restanteBudgetElement.textContent = formatMoney(totalRestante);
 
-  // Actualizamos la barra de progreso
   progressBarElement.style.width = `${porcentajeUtilizado}%`;
 
-  // Cambiar el color de la barra según el porcentaje
   if (porcentajeUtilizado < 60) {
     progressBarElement.style.background =
       "linear-gradient(to right, var(--secondary), #0d9668)";
@@ -237,7 +215,6 @@ function updateStats() {
       "linear-gradient(to right, var(--danger), #b91c1c)";
   }
 
-  // Mostrar el porcentaje en la barra si es mayor a 5%
   if (porcentajeUtilizado > 5) {
     progressBarElement.textContent = `${porcentajeUtilizado.toFixed(1)}%`;
   } else {
@@ -245,7 +222,6 @@ function updateStats() {
   }
 }
 
-// Renderiza la lista de últimos gastos
 function renderUltimosGastos() {
   if (!expensesList) {
     console.error("No se encontró el elemento .expenses-list");
@@ -264,11 +240,9 @@ function renderUltimosGastos() {
     const expenseItem = document.createElement("div");
     expenseItem.className = "expense-item";
 
-    // Buscar nombre de categoría
     const categoria = getCategoryById(gasto.categoria_id);
     let nombreCategoria = categoria ? categoria.nombre : "Sin categoría";
 
-    // Determinar si es subcategoría
     let nombreSubcategoria = "";
     if (categoria && categoria.categoria_padre_id) {
       const categoriaPadre = getCategoryById(categoria.categoria_padre_id);
@@ -296,7 +270,6 @@ function renderUltimosGastos() {
   });
 }
 
-// Crea el gráfico de gastos por categorías
 function createCategoryChart() {
   if (!chartContainer) {
     console.error("No se encontró el elemento #chartContainer");
@@ -305,7 +278,6 @@ function createCategoryChart() {
 
   chartContainer.innerHTML = "";
 
-  // Obtenemos los gastos del mes actual
   const today = new Date();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
@@ -318,33 +290,28 @@ function createCategoryChart() {
     );
   });
 
-  // Si no hay gastos, mostramos un mensaje
   if (gastosDelMes.length === 0) {
     chartContainer.innerHTML =
       '<div class="no-data">No hay datos para mostrar en el gráfico</div>';
     return;
   }
 
-  // Agrupamos los gastos por categoría principal (incluso si son subcategorías)
   const gastosPorCategoria = {};
 
   gastosDelMes.forEach((gasto) => {
     let categoriaId = gasto.categoria_id;
 
-    // Si es una subcategoría, obtenemos la categoría principal
     const categoria = getCategoryById(categoriaId);
     if (categoria && categoria.categoria_padre_id) {
       categoriaId = categoria.categoria_padre_id;
     }
 
-    // Sumamos el gasto a la categoría
     if (!gastosPorCategoria[categoriaId]) {
       gastosPorCategoria[categoriaId] = 0;
     }
     gastosPorCategoria[categoriaId] += parseFloat(gasto.monto);
   });
 
-  // Convertimos el objeto a un array para ordenarlo
   const categoriasArray = Object.keys(gastosPorCategoria).map((id) => {
     const categoria = getCategoryById(parseInt(id));
     return {
@@ -354,16 +321,12 @@ function createCategoryChart() {
     };
   });
 
-  // Ordenamos por monto (mayor a menor)
   categoriasArray.sort((a, b) => b.monto - a.monto);
 
-  // Tomamos las 4 categorías con mayor gasto
   const topCategorias = categoriasArray.slice(0, 4);
 
-  // Calculamos el total para obtener porcentajes
   const totalGastado = topCategorias.reduce((sum, cat) => sum + cat.monto, 0);
 
-  // Creamos las barras para cada categoría
   topCategorias.forEach((categoria) => {
     const porcentaje = (categoria.monto / totalGastado) * 100;
 
@@ -381,7 +344,6 @@ function createCategoryChart() {
     chartContainer.appendChild(barGroup);
   });
 
-  // Si hay más categorías, añadimos una barra para "Otros"
   if (categoriasArray.length > 4) {
     const otrosMonto = categoriasArray
       .slice(4)
@@ -403,43 +365,35 @@ function createCategoryChart() {
   }
 }
 
-// Configura los event listeners
 function setupEventListeners() {
-  // Categoría change (para actualizar subcategorías)
   if (categoriaSelect) {
     categoriaSelect.addEventListener("change", updateSubcategorias);
   }
 
-  // Ver más gastos
   if (verMasButton) {
     verMasButton.addEventListener("click", () => {
       window.location.href = "/gastos";
     });
   }
 
-  // Formulario de gastos
   if (gastoForm) {
     gastoForm.addEventListener("submit", handleGastoFormSubmit);
   }
 }
 
-// Maneja el envío del formulario de gastos
 async function handleGastoFormSubmit(e) {
   e.preventDefault();
 
-  // Obtener los valores del formulario
   const descripcion = document.getElementById("descripcion").value;
   const monto = document.getElementById("monto").value;
   const categoriaId = subcategoriaSelect.value || categoriaSelect.value;
   const fechaGasto = document.getElementById("fecha_gasto").value;
 
-  // Validar campos
   if (!monto || !categoriaId || !fechaGasto) {
     showToast("Por favor, completa todos los campos requeridos", "error");
     return;
   }
 
-  // Crear objeto con los datos del gasto
   const gastoData = {
     usuario_id: currentUser.id,
     categoria_id: categoriaId,
@@ -464,15 +418,12 @@ async function handleGastoFormSubmit(e) {
     const result = await response.json();
     console.log("Gasto añadido:", result);
 
-    // Limpiar formulario
     gastoForm.reset();
 
-    // Actualizar fecha actual
     const today = new Date();
     const formattedDate = today.toISOString().substr(0, 10);
     document.getElementById("fecha_gasto").value = formattedDate;
 
-    // Recargar datos
     await loadGastos();
     updateStats();
     renderUltimosGastos();
@@ -480,7 +431,6 @@ async function handleGastoFormSubmit(e) {
 
     showToast("Gasto añadido correctamente");
 
-    // Resetear subcategorías
     subcategoriaSelect.disabled = true;
     subcategoriaSelect.innerHTML =
       '<option value="">Selecciona primero una categoría</option>';
@@ -491,7 +441,6 @@ async function handleGastoFormSubmit(e) {
   }
 }
 
-// Actualiza las subcategorías en base a la categoría seleccionada
 function updateSubcategorias() {
   subcategoriaSelect.innerHTML =
     '<option value="">Selecciona una subcategoría</option>';
@@ -523,25 +472,20 @@ function updateSubcategorias() {
   }
 }
 
-// Llena el select de categorías
 function populateCategoriasSelect(selectElement) {
   if (!selectElement) return;
 
-  // Limpiar opciones actuales
   selectElement.innerHTML = "";
 
-  // Añadir opción por defecto
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "Selecciona una categoría";
   selectElement.appendChild(defaultOption);
 
-  // Obtener categorías principales (sin padre)
   const categoriasPrincipales = categorias.filter(
     (cat) => !cat.categoria_padre_id
   );
 
-  // Añadir opciones para categorías principales
   categoriasPrincipales.forEach((categoria) => {
     const option = document.createElement("option");
     option.value = categoria.categoria_id;
@@ -550,12 +494,10 @@ function populateCategoriasSelect(selectElement) {
   });
 }
 
-// Busca una categoría por su ID
 function getCategoryById(categoryId) {
   return categorias.find((cat) => cat.categoria_id == categoryId);
 }
 
-// Formatea un monto como moneda
 function formatMoney(amount) {
   return new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -569,25 +511,19 @@ function formatDate(dateString) {
   return new Date(dateString).toLocaleDateString("es-ES", options);
 }
 
-// Muestra una notificación toast
 function showToast(message, type = "success") {
   const toast = document.getElementById("toast");
   const toastMessage = document.getElementById("toast-message");
 
-  // Eliminar clases existentes
   toast.classList.remove("success", "error", "warning");
 
-  // Añadir clase apropiada
   toast.classList.add(type);
 
-  // Establecer mensaje
   toastMessage.textContent = message;
 
-  // Mostrar toast
   toast.classList.add("active");
 
-  // Ocultar después de 3 segundos
   setTimeout(() => {
     toast.classList.remove("active");
-  }, 3000);
+  }, 2000);
 }

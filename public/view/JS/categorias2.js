@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Función para agregar botones de acción masiva
 function agregarBotonesAccionMasiva() {
   const sectionHeader = document.querySelector(".section-header");
 
@@ -72,7 +71,6 @@ function agregarBotonesAccionMasiva() {
     </button>
   `;
 
-  // Insertar después de los botones de héroe
   const heroButtons = sectionHeader.querySelector(".hero-buttons");
   if (heroButtons) {
     heroButtons.parentNode.insertBefore(
@@ -83,7 +81,6 @@ function agregarBotonesAccionMasiva() {
     sectionHeader.appendChild(botonesContainer);
   }
 
-  // Agregar event listeners
   document
     .getElementById("expandirTodoBtn")
     .addEventListener("click", expandirTodasCategorias);
@@ -437,12 +434,10 @@ function crearCategoriaHeader(categoria) {
   const header = document.createElement("div");
   header.className = "category-card-header";
 
-  // Crear contenedor flexible para título y acciones
   const headerContent = document.createElement("div");
   headerContent.className = "header-content";
   header.appendChild(headerContent);
 
-  // Añadir título
   const titulo = document.createElement("h3");
   titulo.className = "category-title";
   titulo.textContent = categoria.nombre;
@@ -457,18 +452,17 @@ function crearCategoriaHeader(categoria) {
 
   headerContent.appendChild(titulo);
 
-  // Agregar botones de editar/eliminar para categorías que no son por defecto
   if (categoria.usuario_id !== 0) {
     const actionsContainer = document.createElement("div");
     actionsContainer.className = "category-actions";
 
     const editBtn = crearBoton("edit", "category-btn edit-btn", (e) => {
-      e.stopPropagation(); // Evitar que se propague el clic al header
+      e.stopPropagation(); 
       editarCategoria(categoria.id);
     });
 
     const deleteBtn = crearBoton("delete", "category-btn delete-btn", (e) => {
-      e.stopPropagation(); // Evitar que se propague el clic al header
+      e.stopPropagation(); 
       eliminarCategoria(categoria.id);
     });
 
@@ -483,13 +477,10 @@ function crearCategoriaHeader(categoria) {
   expandIcon.textContent = "expand_more";
   header.appendChild(expandIcon);
 
-  // Añadir evento de clic para expandir/colapsar
   header.addEventListener("click", function () {
-    // Alternar la clase active en esta categoría
     const card = header.parentElement;
     card.classList.toggle("active");
 
-    // Cambiar el icono según el estado
     expandIcon.textContent = card.classList.contains("active")
       ? "expand_less"
       : "expand_more";
@@ -521,23 +512,19 @@ function renderizarCategorias() {
 
   console.log(`Renderizando ${categorias.length} categorías`);
 
-  // Separar categorías del usuario y categorías predefinidas
   const categoriasUsuario = categorias.filter((cat) => cat.usuario_id !== 0);
   const categoriasPredefinidas = categorias.filter(
     (cat) => cat.usuario_id === 0
   );
 
-  // Crear contenedor de columnas
   const columnContainer = document.createElement("div");
   columnContainer.className = "category-columns";
   contenedor.appendChild(columnContainer);
 
-  // Crear columna para categorías del usuario
   const columnaUsuario = document.createElement("div");
   columnaUsuario.className = "category-column user-categories-column";
   columnContainer.appendChild(columnaUsuario);
 
-  // Crear encabezado para columna de usuario
   const encabezadoUsuario = document.createElement("div");
   encabezadoUsuario.className = "column-header";
   encabezadoUsuario.innerHTML =
@@ -592,12 +579,10 @@ function renderizarCategorias() {
   encabezadoPredefinidas.appendChild(toggleBtn);
   columnaPredefinidas.appendChild(encabezadoPredefinidas);
 
-  // Crear grid para categorías predefinidas
   const gridPredefinidas = document.createElement("div");
   gridPredefinidas.className = "categories-grid predefined-grid";
   columnaPredefinidas.appendChild(gridPredefinidas);
 
-  // Renderizar categorías predefinidas
   categoriasPredefinidas.forEach((categoria) => {
     const categoriaCard = crearTarjetaCategoria(categoria);
     gridPredefinidas.appendChild(categoriaCard);
@@ -612,11 +597,9 @@ function crearTarjetaCategoria(categoria) {
     categoriaCard.classList.add("predefined-card");
   }
 
-  // Crear header
   const header = crearCategoriaHeader(categoria);
   categoriaCard.appendChild(header);
 
-  // Crear contenedor de subcategorías
   const subcontainer = document.createElement("div");
   subcontainer.className = "subcategories-container";
   categoriaCard.appendChild(subcontainer);
@@ -634,7 +617,6 @@ function crearTarjetaCategoria(categoria) {
         subItem.classList.add("predefined-subcategory");
       }
 
-      // Crear nombre de subcategoría
       const nombre = document.createElement("span");
       nombre.className = "subcategory-name";
       nombre.textContent = subcategoria.nombre;
@@ -658,7 +640,6 @@ function crearTarjetaCategoria(categoria) {
         actionsContainer.appendChild(deleteBtn);
         subItem.appendChild(actionsContainer);
       } else {
-        // Para subcategorías predefinidas, añadir un indicador visual
         const predefinedBadge = document.createElement("span");
         predefinedBadge.className = "subcategory-badge";
         predefinedBadge.textContent = "Predefinida";
@@ -668,14 +649,12 @@ function crearTarjetaCategoria(categoria) {
       subcontainer.appendChild(subItem);
     });
   } else if (categoria.usuario_id !== 0) {
-    // Solo mostrar mensaje de "No hay subcategorías" para categorías del usuario
     const mensaje = document.createElement("div");
     mensaje.className = "no-subcategories";
     mensaje.textContent = "No hay subcategorías";
     subcontainer.appendChild(mensaje);
   }
 
-  // Solo añadir el botón de añadir subcategoría si la categoría no es por defecto
   if (categoria.usuario_id !== 0) {
     const addContainer = document.createElement("div");
     addContainer.className = "category-add-container";
